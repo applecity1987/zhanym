@@ -1,0 +1,118 @@
+html = open('/Users/darknet/dating-site/templates/dashboard.html', 'w', encoding='utf-8')
+html.write("""<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoveMatch — Лента</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f5f5f5;min-height:100vh}
+.header{background:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.logo{font-size:24px;font-weight:bold;color:#ff6b6b}
+.nav a{margin-left:15px;text-decoration:none;color:#666;font-size:14px}
+.nav a:hover{color:#ff6b6b}
+.container{max-width:420px;margin:30px auto;padding:0 20px}
+.card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.15);position:relative;margin-bottom:20px}
+.card-photo{width:100%;height:400px;object-fit:cover;background:linear-gradient(135deg,#ff6b6b,#fd79a8);display:flex;align-items:center;justify-content:center;font-size:80px}
+.card-info{padding:20px}
+.card-name{font-size:24px;font-weight:bold;color:#333}
+.card-details{color:#888;font-size:14px;margin-top:5px}
+.card-bio{color:#555;font-size:15px;margin-top:10px;line-height:1.5}
+.actions{display:flex;justify-content:center;gap:20px;padding:20px}
+.btn-action{width:65px;height:65px;border-radius:50%;border:none;font-size:28px;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,.2);transition:.2s}
+.btn-action:hover{transform:scale(1.1)}
+.btn-skip{background:white;color:#ff4444}
+.btn-like{background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white}
+.btn-super{background:linear-gradient(135deg,#4facfe,#00f2fe);color:white}
+.empty{text-align:center;padding:60px 20px;color:#aaa}
+.empty h2{font-size:24px;margin-bottom:10px}
+.match-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;flex-direction:column}
+.match-popup.show{display:flex}
+.match-text{color:white;font-size:36px;font-weight:bold;margin-bottom:20px}
+.match-btn{padding:15px 40px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white;border:none;border-radius:50px;font-size:18px;cursor:pointer}
+.filters{background:white;border-radius:15px;padding:15px;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.filters select{padding:8px 12px;border:2px solid #eee;border-radius:10px;font-size:14px;margin-right:10px;outline:none}
+.filters button{padding:8px 15px;background:#ff6b6b;color:white;border:none;border-radius:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">💕 LoveMatch</div>
+  <div class="nav">
+    <a href="/dashboard">Лента</a>
+    <a href="/profile">Профиль</a>
+    <a href="#" onclick="logout()">Выйти</a>
+  </div>
+</div>
+<div class="container">
+  <div class="filters">
+    <select id="gender"><option value="">Все</option><option value="male">Мужчины</option><option value="female">Женщины</option></select>
+    <select id="city"><option value="">Все города</option><option value="Алматы">Алматы</option><option value="Астана">Астана</option></select>
+    <button onclick="loadUsers()">Найти</button>
+  </div>
+  <div id="cards"></div>
+</div>
+<div class="match-popup" id="matchPopup">
+  <div class="match-text">💕 Это Cool!</div>
+  <p style="color:white;margin-bottom:20px">Вы понравились друг другу</p>
+  <button class="match-btn" onclick="closeMatch()">Продолжить</button>
+</div>
+<script>
+const token = localStorage.getItem('token');
+if(!token) window.location.href = '/login';
+
+let users = [];
+let currentIndex = 0;
+
+async function loadUsers() {
+  const gender = document.getElementById('gender').value;
+  const city = document.getElementById('city').value;
+  let url = '/search/?';
+  if(gender) url += 'gender='+gender+'&';
+  if(city) url += 'city='+city+'&';
+  try {
+    const res = await fetch(url, {headers:{'Authorization':'Bearer '+token}});
+    if(res.status === 401){ window.location.href='/login'; return; }
+    users = await res.json();
+    currentIndex = 0;
+    showCard();
+  } catch(e){ console.log(e); }
+}
+
+function showCard() {
+  const container = document.getElementById('cards');
+  if(currentIndex >= users.length){
+    container.innerHTML = '<div class="empty"><h2>Никого нет</h2><p>Попробуй изменить фильтры</p></div>';
+    return;
+  }
+  const user = users[currentIndex];
+  container.innerHTML = '<div class="card"><div class="card-photo">'+getEmoji(user.gender)+'</div><div class="card-info"><div class="card-name">'+user.name+', '+user.age+'</div><div class="card-details">'+user.city+'</div><div class="card-bio">'+(user.bio||'')+'</div></div><div class="actions"><button class="btn-action btn-skip" onclick="skip()">✕</button><button class="btn-action btn-super" onclick="superLike('+user.id+')">⭐</button><button class="btn-action btn-like" onclick="like('+user.id+')">♥</button></div></div>';
+}
+
+function getEmoji(gender){ return gender === 'female' ? '👩' : '👨'; }
+
+function skip(){ currentIndex++; showCard(); }
+
+async function like(userId) {
+  try {
+    const res = await fetch('/search/like/'+userId, {method:'POST', headers:{'Authorization':'Bearer '+token}});
+    const data = await res.json();
+    if(data.message && data.message.includes('Match')){
+      document.getElementById('matchPopup').classList.add('show');
+    } else {
+      currentIndex++; showCard();
+    }
+  } catch(e){ currentIndex++; showCard(); }
+}
+
+function superLike(userId){ like(userId); }
+function closeMatch(){ document.getElementById('matchPopup').classList.remove('show'); currentIndex++; showCard(); }
+function logout(){ localStorage.removeItem('token'); window.location.href='/'; }
+
+loadUsers();
+</script>
+</body>
+</html>""")
+html.close()
+print('Done')
