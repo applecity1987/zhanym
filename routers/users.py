@@ -47,6 +47,35 @@ def upload_photo(
     db.commit()
     return {"photo": filename}
 
+@router.put("/me/onboarding")
+def save_onboarding(
+    goal: str = None,
+    drink: str = None,
+    smoke: str = None,
+    sport: str = None,
+    pet: str = None,
+    communication: str = None,
+    love_language: str = None,
+    education: str = None,
+    zodiac: str = None,
+    interests: str = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if goal: current_user.goal = goal
+    if drink: current_user.drink = drink
+    if smoke: current_user.smoke = smoke
+    if sport: current_user.sport = sport
+    if pet: current_user.pet = pet
+    if communication: current_user.communication = communication
+    if love_language: current_user.love_language = love_language
+    if education: current_user.education = education
+    if zodiac: current_user.zodiac = zodiac
+    if interests: current_user.interests = interests
+    db.commit()
+    db.refresh(current_user)
+    return {"status": "ok"}
+
 @router.get("/{user_id}")
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhanym — Создай анкету</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#fff;min-height:100vh}
+.progress{height:4px;background:#eee;position:fixed;top:0;left:0;right:0;z-index:100}
+.progress-bar{height:100%;background:linear-gradient(135deg,#ff4458,#fd79a8);transition:.4s}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px}
+.btn-back{background:none;border:none;font-size:24px;cursor:pointer;color:#333}
+.btn-skip{background:none;border:none;font-size:16px;color:#888;cursor:pointer}
+.step{display:none;padding:0 25px 100px;max-width:500px;margin:0 auto}
+.step.active{display:block}
+.step h1{font-size:32px;font-weight:900;color:#1a1a1a;margin-bottom:10px;line-height:1.2}
+.step p{color:#888;font-size:16px;margin-bottom:30px;line-height:1.6}
+
+/* ЦЕЛЬ */
+.goal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.goal-item{border:2px solid #eee;border-radius:16px;padding:20px 10px;text-align:center;cursor:pointer;transition:.2s}
+.goal-item:hover{border-color:#ff4458;background:#fff5f5}
+.goal-item.selected{border-color:#ff4458;background:#fff0f0}
+.goal-icon{font-size:36px;margin-bottom:8px}
+.goal-item p{font-size:13px;color:#333;margin:0}
+
+/* ТЕГИ */
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.tag{padding:10px 18px;border:2px solid #eee;border-radius:50px;font-size:14px;cursor:pointer;transition:.2s;color:#333}
+.tag:hover{border-color:#ff4458;color:#ff4458}
+.tag.selected{background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border-color:transparent}
+
+/* ФОТО */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.photo-slot{aspect-ratio:3/4;border:2px dashed #ddd;border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;background:#f9f9f9;transition:.2s}
+.photo-slot:hover{border-color:#ff4458}
+.photo-slot .plus{width:36px;height:36px;background:linear-gradient(135deg,#ff4458,#fd79a8);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:bold;position:absolute;bottom:8px;right:8px}
+.photo-slot img{width:100%;height:100%;object-fit:cover}
+.photo-count{color:#888;font-size:14px;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.photo-count span{width:36px;height:36px;background:#f0f0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#333}
+
+/* СЕКЦИЯ ПРИВЫЧЕК */
+.habit-section{margin-bottom:25px;padding-bottom:25px;border-bottom:1px solid #eee}
+.habit-section:last-child{border-bottom:none}
+.habit-title{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:bold;color:#1a1a1a;margin-bottom:15px}
+.habit-title span{font-size:22px}
+
+/* КНОПКА ДАЛЕЕ */
+.btn-next{position:fixed;bottom:30px;left:25px;right:25px;max-width:450px;margin:0 auto;padding:18px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;transition:.3s;display:block}
+.btn-next:disabled{background:#eee;color:#aaa;cursor:not-allowed}
+.btn-next:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,68,88,.4)}
+.counter{color:#888;font-size:14px;margin-bottom:5px}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-bar" id="progressBar" style="width:20%"></div></div>
+
+<!-- ШАГ 1: ЦЕЛЬ -->
+<div class="step active" id="step1">
+  <div class="top"><button class="btn-back" onclick="goBack()">‹</button><span></span></div>
+  <h1>Что ты ищешь?</h1>
+  <p>Ничего страшного, если это изменится. В Zhanym ты найдёшь то, что ищешь.</p>
+  <div class="goal-grid">
+    <div class="goal-item" onclick="selectGoal(this,'partner')"><div class="goal-icon">💘</div><p>Долгосрочный партнёр</p></div>
+    <div class="goal-item" onclick="selectGoal(this,'both')"><div class="goal-icon">😍</div><p>Долго- или краткосрочно</p></div>
+    <div class="goal-item" onclick="selectGoal(this,'short')"><div class="goal-icon">🥂</div><p>Краткосрочные отношения</p></div>
+    <div class="goal-item" onclick="selectGoal(this,'fun')"><div class="goal-icon">🎉</div><p>Просто повеселиться</p></div>
+    <div class="goal-item" onclick="selectGoal(this,'friends')"><div class="goal-icon">👋</div><p>Найти друзей</p></div>
+    <div class="goal-item" onclick="selectGoal(this,'unsure')"><div class="goal-icon">🤔</div><p>Всё ещё разбираюсь</p></div>
+  </div>
+  <button class="btn-next" id="btn1" disabled onclick="nextStep()">Далее</button>
+</div>
+
+<!-- ШАГ 2: ПРИВЫЧКИ -->
+<div class="step" id="step2">
+  <div class="top"><button class="btn-back" onclick="goBack()">‹</button><button class="btn-skip" onclick="nextStep()">Пропустить</button></div>
+  <h1>Расскажи о своих привычках</h1>
+  <p>Твои привычки похожи на привычки пары? У тебя право первого слова.</p>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🍷</span> Как часто ты пьёшь?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectHabit(this,'drink')">Не пью</div>
+      <div class="tag" onclick="selectHabit(this,'drink')">Я за трезвость</div>
+      <div class="tag" onclick="selectHabit(this,'drink')">По особым случаям</div>
+      <div class="tag" onclick="selectHabit(this,'drink')">По выходным</div>
+      <div class="tag" onclick="selectHabit(this,'drink')">Почти каждый вечер</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🚬</span> Как часто ты куришь?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectHabit(this,'smoke')">Не курю</div>
+      <div class="tag" onclick="selectHabit(this,'smoke')">Бросаю</div>
+      <div class="tag" onclick="selectHabit(this,'smoke')">Курю за компанию</div>
+      <div class="tag" onclick="selectHabit(this,'smoke')">Курю</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🏋️</span> Занимаешься спортом?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectHabit(this,'sport')">Каждый день</div>
+      <div class="tag" onclick="selectHabit(this,'sport')">Часто</div>
+      <div class="tag" onclick="selectHabit(this,'sport')">Иногда</div>
+      <div class="tag" onclick="selectHabit(this,'sport')">Никогда</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🐾</span> У тебя есть питомцы?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectHabit(this,'pet')">Собака</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Кошка</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Птица</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Рыбки</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Черепаха</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Хомяк</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Нет питомцев</div>
+      <div class="tag" onclick="selectHabit(this,'pet')">Хочу питомца</div>
+    </div>
+  </div>
+
+  <button class="btn-next" onclick="nextStep()">Далее 0/4</button>
+</div>
+
+<!-- ШАГ 3: О СЕБЕ -->
+<div class="step" id="step3">
+  <div class="top"><button class="btn-back" onclick="goBack()">‹</button><button class="btn-skip" onclick="nextStep()">Пропустить</button></div>
+  <h1>Что ещё делает тебя — тобой?</h1>
+  <p>Не закрывайся. Людям нравится искренность.</p>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>💬</span> Твой стиль общения?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectOne(this,'comm')">Много переписываюсь</div>
+      <div class="tag" onclick="selectOne(this,'comm')">Общаюсь по телефону</div>
+      <div class="tag" onclick="selectOne(this,'comm')">Люблю видеочаты</div>
+      <div class="tag" onclick="selectOne(this,'comm')">Лучше встречусь лично</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>❤️</span> Какие проявления любви нравятся?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectOne(this,'love')">Жесты внимания</div>
+      <div class="tag" onclick="selectOne(this,'love')">Подарки</div>
+      <div class="tag" onclick="selectOne(this,'love')">Прикосновения</div>
+      <div class="tag" onclick="selectOne(this,'love')">Комплименты</div>
+      <div class="tag" onclick="selectOne(this,'love')">Время вместе</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🎓</span> Твоё образование?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectOne(this,'edu')">Средняя школа</div>
+      <div class="tag" onclick="selectOne(this,'edu')">Техникум</div>
+      <div class="tag" onclick="selectOne(this,'edu')">Бакалавриат</div>
+      <div class="tag" onclick="selectOne(this,'edu')">Магистратура</div>
+      <div class="tag" onclick="selectOne(this,'edu')">Аспирантура</div>
+      <div class="tag" onclick="selectOne(this,'edu')">Доктор наук</div>
+    </div>
+  </div>
+
+  <div class="habit-section">
+    <div class="habit-title"><span>🌙</span> Знак зодиака?</div>
+    <div class="tags">
+      <div class="tag" onclick="selectOne(this,'zodiac')">Овен</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Телец</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Близнецы</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Рак</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Лев</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Дева</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Весы</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Скорпион</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Стрелец</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Козерог</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Водолей</div>
+      <div class="tag" onclick="selectOne(this,'zodiac')">Рыбы</div>
+    </div>
+  </div>
+
+  <button class="btn-next" onclick="nextStep()">Далее</button>
+</div>
+
+<!-- ШАГ 4: ИНТЕРЕСЫ -->
+<div class="step" id="step4">
+  <div class="top"><button class="btn-back" onclick="goBack()">‹</button><button class="btn-skip" onclick="nextStep()">Пропустить</button></div>
+  <h1>Чем ты увлекаешься?</h1>
+  <p>У тебя есть свои интересы. Поделись ими с другими.</p>
+  <div class="counter" id="interestCount">Выбрано: 0/10</div>
+  <div class="tags" id="interestTags">
+    <div class="tag" onclick="selectInterest(this)">☕ Кофе</div>
+    <div class="tag" onclick="selectInterest(this)">✈️ Путешествия</div>
+    <div class="tag" onclick="selectInterest(this)">📚 Чтение</div>
+    <div class="tag" onclick="selectInterest(this)">🎮 Игры</div>
+    <div class="tag" onclick="selectInterest(this)">🎵 Музыка</div>
+    <div class="tag" onclick="selectInterest(this)">🏃 Спорт</div>
+    <div class="tag" onclick="selectInterest(this)">🍕 Еда</div>
+    <div class="tag" onclick="selectInterest(this)">🎨 Искусство</div>
+    <div class="tag" onclick="selectInterest(this)">🎭 Театр</div>
+    <div class="tag" onclick="selectInterest(this)">🏔️ Горы</div>
+    <div class="tag" onclick="selectInterest(this)">🧘 Йога</div>
+    <div class="tag" onclick="selectInterest(this)">🎬 Кино</div>
+    <div class="tag" onclick="selectInterest(this)">🐕 Животные</div>
+    <div class="tag" onclick="selectInterest(this)">🍳 Кулинария</div>
+    <div class="tag" onclick="selectInterest(this)">📸 Фото</div>
+    <div class="tag" onclick="selectInterest(this)">🚴 Велоспорт</div>
+    <div class="tag" onclick="selectInterest(this)">🎸 Гитара</div>
+    <div class="tag" onclick="selectInterest(this)">💃 Танцы</div>
+    <div class="tag" onclick="selectInterest(this)">🏄 Сёрфинг</div>
+    <div class="tag" onclick="selectInterest(this)">⛷️ Лыжи</div>
+    <div class="tag" onclick="selectInterest(this)">🧩 Настолки</div>
+    <div class="tag" onclick="selectInterest(this)">🎤 Караоке</div>
+    <div class="tag" onclick="selectInterest(this)">🌿 Природа</div>
+    <div class="tag" onclick="selectInterest(this)">💻 Технологии</div>
+    <div class="tag" onclick="selectInterest(this)">🏋️ Фитнес</div>
+    <div class="tag" onclick="selectInterest(this)">🎪 Фестивали</div>
+    <div class="tag" onclick="selectInterest(this)">🍣 Суши</div>
+    <div class="tag" onclick="selectInterest(this)">🧁 Выпечка</div>
+    <div class="tag" onclick="selectInterest(this)">🎯 Боулинг</div>
+    <div class="tag" onclick="selectInterest(this)">🏊 Плавание</div>
+  </div>
+  <button class="btn-next" id="btn4" onclick="nextStep()">Далее 0/10</button>
+</div>
+
+<!-- ШАГ 5: ФОТО -->
+<div class="step" id="step5">
+  <div class="top"><button class="btn-back" onclick="goBack()">‹</button></div>
+  <h1>Добавь свои фото</h1>
+  <p>Профили с фото получают в 10 раз больше лайков!</p>
+  <div class="photo-count"><span id="photoCountNum">0</span> из 6 фото добавлено</div>
+  <div class="photo-grid">
+    <div class="photo-slot" onclick="triggerPhoto(0)" id="slot0"><div class="plus">+</div></div>
+    <div class="photo-slot" onclick="triggerPhoto(1)" id="slot1"><div class="plus">+</div></div>
+    <div class="photo-slot" onclick="triggerPhoto(2)" id="slot2"><div class="plus">+</div></div>
+    <div class="photo-slot" onclick="triggerPhoto(3)" id="slot3"><div class="plus">+</div></div>
+    <div class="photo-slot" onclick="triggerPhoto(4)" id="slot4"><div class="plus">+</div></div>
+    <div class="photo-slot" onclick="triggerPhoto(5)" id="slot5"><div class="plus">+</div></div>
+  </div>
+  <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+  <button class="btn-next" id="btn5" onclick="finish()">Далее 0/6</button>
+</div>
+
+<script>
+let currentStep = 1;
+let totalSteps = 5;
+let selectedGoal = null;
+let interestCount = 0;
+let photoCount = 0;
+let activePhotoSlot = 0;
+const token = localStorage.getItem('token');
+if(!token) window.location.href = '/login';
+
+function updateProgress(){
+  document.getElementById('progressBar').style.width = (currentStep/totalSteps*100)+'%';
+}
+
+function nextStep(){
+  if(currentStep < totalSteps){
+    document.getElementById('step'+currentStep).classList.remove('active');
+    currentStep++;
+    document.getElementById('step'+currentStep).classList.add('active');
+    updateProgress();
+    window.scrollTo(0,0);
+  }
+}
+
+function goBack(){
+  if(currentStep > 1){
+    document.getElementById('step'+currentStep).classList.remove('active');
+    currentStep--;
+    document.getElementById('step'+currentStep).classList.add('active');
+    updateProgress();
+  } else {
+    window.location.href = '/dashboard';
+  }
+}
+
+function selectGoal(el, goal){
+  document.querySelectorAll('.goal-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedGoal = goal;
+  document.getElementById('btn1').disabled = false;
+}
+
+function selectHabit(el, group){
+  const siblings = el.parentElement.querySelectorAll('.tag');
+  siblings.forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+  updateHabitBtn();
+}
+
+function selectOne(el, group){
+  const container = el.closest('.habit-section');
+  container.querySelectorAll('.tag').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function updateHabitBtn(){
+  const selected = document.querySelectorAll('#step2 .tag.selected').length;
+  document.querySelector('#step2 .btn-next').textContent = 'Далее '+selected+'/4';
+}
+
+function selectInterest(el){
+  if(el.classList.contains('selected')){
+    el.classList.remove('selected');
+    interestCount--;
+  } else {
+    if(interestCount >= 10) return;
+    el.classList.add('selected');
+    interestCount++;
+  }
+  document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+'/10';
+  document.getElementById('btn4').textContent = 'Далее '+interestCount+'/10';
+}
+
+function triggerPhoto(slot){
+  activePhotoSlot = slot;
+  document.getElementById('photoInput').click();
+}
+
+function handlePhoto(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const slot = document.getElementById('slot'+activePhotoSlot);
+    slot.innerHTML = '<img src="'+ev.target.result+'"><div class="plus" style="background:rgba(255,0,0,.7)" onclick="removePhoto(event,'+activePhotoSlot+')">×</div>';
+    photoCount++;
+    document.getElementById('photoCountNum').textContent = photoCount;
+    document.getElementById('btn5').textContent = 'Далее '+photoCount+'/6';
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto(e, slot){
+  e.stopPropagation();
+  const s = document.getElementById('slot'+slot);
+  s.innerHTML = '<div class="plus">+</div>';
+  s.onclick = function(){ triggerPhoto(slot); };
+  photoCount--;
+  document.getElementById('photoCountNum').textContent = photoCount;
+  document.getElementById('btn5').textContent = 'Далее '+photoCount+'/6';
+}
+
+async function finish(){
+  const selected = {
+    goal: selectedGoal,
+    drink: getSelected('step2', 'drink'),
+    smoke: getSelected('step2', 'smoke'),
+    sport: getSelected('step2', 'sport'),
+    pet: getSelected('step2', 'pet'),
+    communication: getSelected('step3', 'comm'),
+    love_language: getSelected('step3', 'love'),
+    education: getSelected('step3', 'edu'),
+    zodiac: getSelected('step3', 'zodiac'),
+    interests: getInterests()
+  };
+
+  let params = new URLSearchParams();
+  for(let key in selected){ if(selected[key]) params.append(key, selected[key]); }
+
+  try {
+    await fetch('/users/me/onboarding?'+params.toString(), {
+      method:'PUT',
+      headers:{'Authorization':'Bearer '+token}
+    });
+  } catch(e){ console.log(e); }
+
+  window.location.href = '/dashboard';
+}
+
+function getSelected(stepId, group){
+  const step = document.getElementById(stepId);
+  const tags = step.querySelectorAll('.tag.selected');
+  for(let tag of tags){
+    if(tag.getAttribute('onclick') && tag.getAttribute('onclick').includes("'"+group+"'")){
+      return tag.textContent.trim();
+    }
+  }
+  return null;
+}
+
+function getInterests(){
+  const selected = document.querySelectorAll('#step4 .tag.selected');
+  return Array.from(selected).map(t=>t.textContent.trim()).join(',');
+}
+}
+</script>
+</body>
+</html>

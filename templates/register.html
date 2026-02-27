@@ -60,7 +60,7 @@ async function register() {
   try {
     const res = await fetch('/register?email='+email+'&username='+username+'&password='+password+'&name='+name+'&age='+age+'&gender='+gender+'&city='+city, {method:'POST'});
     const data = await res.json();
-    if(res.ok){ showSuccess('Аккаунт создан'); setTimeout(()=>window.location.href='/login',1500); }
+    if(res.ok){ showSuccess('Аккаунт создан'); setTimeout(()=>window.location.href='/onboarding',1500); }
     else { showError(data.detail||'Ошибка'); }
   } catch(e){ showError('Ошибка сервера'); }
 }

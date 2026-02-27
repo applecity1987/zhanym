@@ -15,7 +15,19 @@ class User(Base):
     gender = Column(String)
     city = Column(String)
     bio = Column(Text)
+
     photo = Column(String, default="default.jpg")
+    goal = Column(String, nullable=True)
+    drink = Column(String, nullable=True)
+    smoke = Column(String, nullable=True)
+    sport = Column(String, nullable=True)
+    pet = Column(String, nullable=True)
+    communication = Column(String, nullable=True)
+    love_language = Column(String, nullable=True)
+    education = Column(String, nullable=True)
+    zodiac = Column(String, nullable=True)
+    interests = Column(Text, nullable=True)
+
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 

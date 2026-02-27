@@ -7,7 +7,7 @@ html.write("""<!DOCTYPE html>
 <title>Zhanym — Лента</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:flex;flex-direction:column}
+body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
 /* HEADER */
 .header{background:rgba(0,0,0,.6);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:50}
@@ -16,13 +16,16 @@ body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:fl
 .nav a:hover{background:rgba(255,255,255,.1)}
 
 /* MAIN */
-.main{flex:1;display:flex;align-items:center;justify-content:center;padding:70px 20px 180px}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px 160px;position:relative;z-index:1}
+position:relative;z-index:1 .header, .filters, .actions, .bottom-nav:
+.header{background:rgba(0,0,0,.6);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:50}
 
 /* CARD */
+.card-wrap{width:100%;max-width:460px;position:relative;z-index:2}
 .card-wrap{width:100%;max-width:400px;position:relative}
 .card{border-radius:24px;overflow:hidden;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab;transition:transform .3s;user-select:none}
 .card:active{cursor:grabbing}
-.card-photo{width:100%;height:500px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#ff6b6b,#fd79a8)}
+.card-photo{width:100%;height:440px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#ff6b6b,#fd79a8)}
 .card-photo img{width:100%;height:100%;object-fit:cover}
 .card-gradient{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(0,0,0,.9),transparent)}
 .card-info{position:absolute;bottom:90px;left:0;right:0;padding:0 25px}
@@ -41,7 +44,7 @@ body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:fl
 .progress-dot.active{background:white}
 
 /* ACTIONS */
-.actions{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);display:flex;justify-content:center;align-items:center;gap:15px;padding:12px 30px;background:rgba(13,13,26,.85);border-radius:50px;backdrop-filter:blur(10px);z-index:50}
+.actions{position:fixed;bottom:65px;left:50%;transform:translateX(-50%);display:flex;justify-content:center;align-items:center;gap:15px;padding:12px 30px;background:rgba(13,13,26,.85);border-radius:50px;backdrop-filter:blur(10px);z-index:50}
 .btn-action{border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;box-shadow:0 5px 20px rgba(0,0,0,.3)}
 .btn-action:hover{transform:scale(1.12)}
 .btn-back{width:50px;height:50px;background:rgba(255,255,255,.15);font-size:20px;backdrop-filter:blur(10px)}
@@ -77,6 +80,32 @@ body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:fl
 </style>
 </head>
 <body>
+
+<canvas id="stars" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+<script>
+const c=document.getElementById('stars'),ctx=c.getContext('2d');
+c.width=window.innerWidth;c.height=window.innerHeight;
+const stars=Array.from({length:150},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,o:Math.random(),s:Math.random()*.003+.001}));
+const particles=Array.from({length:20},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*3+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,o:Math.random()*.5}));
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  stars.forEach(s=>{
+    s.o+=s.s; if(s.o>1||s.o<0) s.s*=-1;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${s.o})`;ctx.fill();
+  });
+  particles.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>c.width) p.dx*=-1;
+    if(p.y<0||p.y>c.height) p.dy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,100,150,${p.o})`;ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;});
+</script>
 
 <div class="header">
   <a href="/" class="logo">🌹 Zhanym</a>

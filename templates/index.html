@@ -27,15 +27,22 @@ body{font-family:'Arial',sans-serif;background:#1a1a2e;min-height:100vh;overflow
 .btn-login:hover{background:rgba(255,255,255,.15)}
 
 /* HERO */
-.hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background-image: url("/static/images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 
 /* КАРТОЧКИ КАК У ТИНДЕРА */
-.cards-bg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:8px;padding:8px;opacity:0.7;transform:rotate(-3deg) scale(1.2)}
-.card-item{border-radius:16px;overflow:hidden;position:relative;background:#333}
-.card-item .emoji-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;background:linear-gradient(135deg,var(--c1),var(--c2))}
-.card-item .label{position:absolute;bottom:12px;left:12px;color:white;font-weight:bold;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.card-item .icons{position:absolute;bottom:12px;right:12px;display:flex;gap:6px}
-.card-item .icons span{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;background:rgba(255,255,255,.9)}
 .overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.7))}
 
 /* ЦЕНТРАЛЬНЫЙ КОНТЕНТ */
@@ -110,17 +117,7 @@ document.addEventListener('click', function(e){
 </div>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="cards-bg">
-    <div class="card-item"><div class="emoji-bg" style="--c1:#ff9a9e;--c2:#fecfef">👩</div><div class="label">Айгерим, 24</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#a18cd1;--c2:#fbc2eb">👨</div><div class="label">Арман, 28</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#fda085;--c2:#f6d365">👩</div><div class="label">Дана, 22</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#84fab0;--c2:#8fd3f4">👨</div><div class="label">Диас, 30</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#f093fb;--c2:#f5576c">👩</div><div class="label">Асель, 26</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#4facfe;--c2:#00f2fe">👨</div><div class="label">Нурлан, 27</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#43e97b;--c2:#38f9d7">👩</div><div class="label">Алия, 25</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-    <div class="card-item"><div class="emoji-bg" style="--c1:#fa709a;--c2:#fee140">👨</div><div class="label">Серик, 31</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
-  </div>
+
   <div class="overlay"></div>
   <div class="hero-content">
     <h1>Свайпни <span>вправо™</span></h1>

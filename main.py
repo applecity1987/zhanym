@@ -43,6 +43,11 @@ async def premium_page():
     with open("templates/premium.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
+@app.get("/onboarding", response_class=HTMLResponse)
+async def onboarding_page():
+    with open("templates/onboarding.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
 @app.post("/register")
 def register(email: str, username: str, password: str, name: str, age: int, gender: str, city: str, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == email).first():
