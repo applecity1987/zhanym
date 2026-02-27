@@ -28,6 +28,21 @@ async def register_page():
     with open("templates/register.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
+@app.get("/safety", response_class=HTMLResponse)
+async def safety_page():
+    with open("templates/safety.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/about", response_class=HTMLResponse)
+async def about_page():
+    with open("templates/about.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/premium", response_class=HTMLResponse)
+async def premium_page():
+    with open("templates/premium.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
 @app.post("/register")
 def register(email: str, username: str, password: str, name: str, age: int, gender: str, city: str, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == email).first():

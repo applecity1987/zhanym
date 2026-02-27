@@ -2,25 +2,173 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Zhanym</title>
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhanym — Найди свою пару</title>
+<style>.nav-pill{color:rgba(255,255,255,.85);text-decoration:none;font-size:15px;font-weight:500;padding:8px 18px;border-radius:25px;border:2px solid rgba(255,255,255,.3);transition:.2s}
+.nav-pill:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.6)}
+
+.dropdown{position:relative}
+.dropdown-menu{display:none;position:absolute;top:45px;left:0;background:white;border-radius:15px;padding:10px;box-shadow:0 10px 40px rgba(0,0,0,.3);min-width:200px;z-index:200}
+.dropdown-menu a{display:block;padding:12px 16px;color:#333;text-decoration:none;font-size:15px;font-weight:500;border-radius:10px;transition:.2s}
+.dropdown-menu a:hover{background:#fff0f0;color:#ff4458}
+.dropdown-menu.show{display:block}
+
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#ff6b6b,#fd79a8);min-height:100vh;display:flex;align-items:center;justify-content:center}
-.box{background:#fff;border-radius:30px;padding:50px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:500px;width:90%}
-h1{font-size:36px;color:#ff6b6b;margin:10px 0}
-p{color:#888;margin-bottom:30px}
-a{display:block;padding:15px;border-radius:50px;font-size:18px;font-weight:bold;text-decoration:none;margin-bottom:15px}
-.p{background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:#fff}
-.s{background:#f5f5f5;color:#333}
+body{font-family:'Arial',sans-serif;background:#1a1a2e;min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+.header{position:fixed;top:0;width:100%;z-index:100;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(10px)}
+.logo{font-size:28px;font-weight:900;color:white;display:flex;align-items:center;gap:8px}
+.nav{display:flex;align-items:center;gap:30px}
+.nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:15px;font-weight:500;transition:.2s}
+.nav a:hover{color:white}
+.btn-login{background:transparent;color:white;padding:8px 18px;border-radius:25px;font-weight:500;font-size:15px;border:2px solid rgba(255,255,255,.3)}
+.btn-login:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.6)}
+.btn-login:hover{background:rgba(255,255,255,.15)}
+
+/* HERO */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* КАРТОЧКИ КАК У ТИНДЕРА */
+.cards-bg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:8px;padding:8px;opacity:0.7;transform:rotate(-3deg) scale(1.2)}
+.card-item{border-radius:16px;overflow:hidden;position:relative;background:#333}
+.card-item .emoji-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.card-item .label{position:absolute;bottom:12px;left:12px;color:white;font-weight:bold;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.card-item .icons{position:absolute;bottom:12px;right:12px;display:flex;gap:6px}
+.card-item .icons span{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;background:rgba(255,255,255,.9)}
+.overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.7))}
+
+/* ЦЕНТРАЛЬНЫЙ КОНТЕНТ */
+.hero-content{position:relative;z-index:10;text-align:center;color:white;padding:20px}
+.hero-content h1{font-size:72px;font-weight:900;line-height:1.1;margin-bottom:20px;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.hero-content h1 span{color:#fd79a8}
+.hero-content p{font-size:20px;color:rgba(255,255,255,.85);margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto}
+.hero-buttons{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
+.btn-main{background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;padding:18px 45px;border-radius:50px;font-size:20px;font-weight:bold;text-decoration:none;box-shadow:0 8px 30px rgba(255,68,88,.4);transition:.3s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,68,88,.5)}
+.btn-secondary{background:rgba(255,255,255,.15);color:white;padding:18px 45px;border-radius:50px;font-size:18px;font-weight:bold;text-decoration:none;border:2px solid rgba(255,255,255,.4);backdrop-filter:blur(10px);transition:.3s}
+.btn-secondary:hover{background:rgba(255,255,255,.25)}
+
+/* СЕКЦИЯ ФИЧ */
+.features{background:#fff;padding:80px 40px;text-align:center}
+.features h2{font-size:42px;font-weight:900;color:#1a1a2e;margin-bottom:15px}
+.features p{color:#888;font-size:18px;margin-bottom:60px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;max-width:900px;margin:0 auto}
+.feature{padding:30px;border-radius:20px;background:#f9f9f9}
+.feature-icon{font-size:50px;margin-bottom:15px}
+.feature h3{font-size:22px;font-weight:bold;color:#1a1a2e;margin-bottom:10px}
+.feature p{color:#888;font-size:15px}
+
+/* СЕКЦИЯ СТАТИСТИКИ */
+.stats{background:linear-gradient(135deg,#ff4458,#fd79a8);padding:60px 40px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;max-width:800px;margin:0 auto}
+.stat h3{font-size:52px;font-weight:900;color:white}
+.stat p{color:rgba(255,255,255,.8);font-size:18px}
+
+/* FOOTER */
+.footer{background:#1a1a2e;padding:40px;text-align:center;color:rgba(255,255,255,.5);font-size:14px}
+.footer-logo{font-size:24px;font-weight:900;color:white;margin-bottom:15px}
+
+@media(max-width:768px){
+.hero-content h1{font-size:42px}
+.features-grid,.stats-grid{grid-template-columns:1fr}
+.cards-bg{grid-template-columns:repeat(2,1fr)}
+.nav .nav-links{display:none}
+}
 </style>
 </head>
 <body>
-<div class="box">
-<div style="font-size:60px">💞</div>
-<h1>Zhanym</h1>
-<p>Найди свою вторую половинку уже сегодня</p>
-<a href="/register" class="p">🚀 Начать бесплатно</a>
-<a href="/login" class="s">Уже есть аккаунт? Войти</a>
+
+<script>
+function toggleMenu(e){
+  e.preventDefault();
+  document.getElementById('dropMenu').classList.toggle('show');
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.dropdown')) document.getElementById('dropMenu').classList.remove('show');
+});
+</script>
+<!-- HEADER -->
+<div class="header">
+<div class="logo">🌹 Zhanym</div>
+<div class="nav-links" style="display:flex;gap:10px;align-items:center;margin-left:auto">
+  <div class="dropdown">
+    <a href="#" class="nav-pill" onclick="toggleMenu(event)">Супер Возможности ▾</a>
+    <div class="dropdown-menu" id="dropMenu">
+      <a href="/premium">📋 Наши подписки</a>
+<a href="/premium">⭐ Zhanym Silver</a>
+<a href="/premium">🥇 Zhanym Gold</a>
+<a href="/premium">💎 Zhanym Almaz</a>
+    </div>
+  </div>
+  <a href="/about" class="nav-pill">О нас</a>
+  <a href="/safety" class="nav-pill">Безопасность</a>
+  <a href="/register" class="nav-pill">Регистрация</a>
 </div>
+<a href="/login" class="btn-login nav-pill">Войти</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="cards-bg">
+    <div class="card-item"><div class="emoji-bg" style="--c1:#ff9a9e;--c2:#fecfef">👩</div><div class="label">Айгерим, 24</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#a18cd1;--c2:#fbc2eb">👨</div><div class="label">Арман, 28</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#fda085;--c2:#f6d365">👩</div><div class="label">Дана, 22</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#84fab0;--c2:#8fd3f4">👨</div><div class="label">Диас, 30</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#f093fb;--c2:#f5576c">👩</div><div class="label">Асель, 26</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#4facfe;--c2:#00f2fe">👨</div><div class="label">Нурлан, 27</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#43e97b;--c2:#38f9d7">👩</div><div class="label">Алия, 25</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+    <div class="card-item"><div class="emoji-bg" style="--c1:#fa709a;--c2:#fee140">👨</div><div class="label">Серик, 31</div><div class="icons"><span>✕</span><span>❤️</span></div></div>
+  </div>
+  <div class="overlay"></div>
+  <div class="hero-content">
+    <h1>Свайпни <span>вправо™</span></h1>
+    <p>Найди свою вторую половинку среди тысяч людей. Знакомства стали проще!</p>
+    <div class="hero-buttons">
+      <a href="/register" class="btn-main">🚀 Создать аккаунт</a>
+      <a href="/login" class="btn-secondary">Уже есть аккаунт</a>
+    </div>
+  </div>
+</div>
+
+<!-- ФИЧИ -->
+<div class="features">
+  <h2>Почему Zhanym?</h2>
+  <p>Мы создали лучший способ познакомиться с новыми людьми</p>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">💞</div>
+      <h3>Умные пары</h3>
+      <p>Наш алгоритм подбирает людей по твоим интересам и предпочтениям</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💬</div>
+      <h3>Мгновенный чат</h3>
+      <p>Общайся с парами в реальном времени через удобный чат</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <h3>Полная безопасность</h3>
+      <p>Твои данные защищены. Мы заботимся о твоей приватности</p>
+    </div>
+  </div>
+</div>
+
+<!-- СТАТИСТИКА -->
+<div class="stats">
+  <div class="stats-grid">
+    <div class="stat"><h3>10К+</h3><p>Пользователей</p></div>
+    <div class="stat"><h3>5К+</h3><p>Счастливых пар</p></div>
+    <div class="stat"><h3>98%</h3><p>Довольных людей</p></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">🌹 Zhanym</div>
+  <p>© 2026 Zhanym. Все права защищены.</p>
+</div>
+
 </body>
 </html>

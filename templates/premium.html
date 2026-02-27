@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Супер Возможности — Zhanym</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0d0d1a;color:white}
+.header{background:rgba(0,0,0,.5);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;width:100%;z-index:100;backdrop-filter:blur(10px)}
+.logo{font-size:24px;font-weight:900;color:white;text-decoration:none}
+.nav a{color:rgba(255,255,255,.8);text-decoration:none;margin-left:20px;font-size:15px}
+.hero{padding:120px 40px 60px;text-align:center;background:linear-gradient(135deg,#0d0d1a,#1a1a2e)}
+.hero h1{font-size:52px;font-weight:900;margin-bottom:15px}
+.hero p{font-size:18px;color:rgba(255,255,255,.7);max-width:600px;margin:0 auto}
+
+/* КАРТОЧКИ ПОДПИСОК */
+.plans{padding:60px 40px;background:#0d0d1a}
+.plans h2{text-align:center;font-size:38px;font-weight:900;margin-bottom:10px}
+.plans p{text-align:center;color:rgba(255,255,255,.6);margin-bottom:50px;font-size:16px}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;max-width:1000px;margin:0 auto}
+.plan{background:#1a1a2e;border-radius:20px;padding:35px;position:relative;border:2px solid rgba(255,255,255,.1);transition:.3s}
+.plan:hover{transform:translateY(-5px)}
+.plan.popular{border-color:#ffd700;background:linear-gradient(135deg,#1a1a2e,#2a2a1e)}
+.plan.best{border-color:#b9f2ff;background:linear-gradient(135deg,#0d1a2e,#0d2a3e)}
+.plan-badge{position:absolute;top:-15px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:20px;font-size:13px;font-weight:bold;white-space:nowrap}
+.plan-icon{font-size:50px;margin-bottom:15px;text-align:center}
+.plan h3{font-size:26px;font-weight:900;text-align:center;margin-bottom:8px}
+.plan .price{text-align:center;font-size:36px;font-weight:900;color:#ff4458;margin-bottom:5px}
+.plan .price span{font-size:16px;color:rgba(255,255,255,.5)}
+.plan ul{list-style:none;margin:20px 0;padding:0}
+.plan ul li{padding:8px 0;font-size:15px;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:8px}
+.plan ul li:last-child{border-bottom:none}
+.plan-btn{display:block;width:100%;padding:14px;border-radius:50px;font-size:16px;font-weight:bold;text-align:center;text-decoration:none;margin-top:20px;cursor:pointer;border:none}
+
+/* ТАБЛИЦА */
+.comparison{padding:60px 40px;background:#111122}
+.comparison h2{text-align:center;font-size:38px;font-weight:900;margin-bottom:10px}
+.comparison p{text-align:center;color:rgba(255,255,255,.6);margin-bottom:40px}
+.table-wrap{max-width:900px;margin:0 auto;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:15px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.1)}
+td:first-child{text-align:left}
+th{font-size:16px;font-weight:bold}
+th:first-child{text-align:left}
+tr:hover{background:rgba(255,255,255,.03)}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin:0 auto}
+.dot-free{background:#555}
+.dot-silver{background:#C0C0C0}
+.dot-gold{background:#ffd700}
+.dot-almaz{background:#b9f2ff}
+
+/* О ZHANYM */
+.about-section{padding:60px 40px;background:#0d0d1a;max-width:900px;margin:0 auto}
+.about-section h2{font-size:36px;font-weight:900;margin-bottom:20px;color:white}
+.about-section p{color:rgba(255,255,255,.7);font-size:16px;line-height:1.9;margin-bottom:15px}
+.note{color:rgba(255,255,255,.4);font-size:13px;line-height:1.7;padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-top:20px}
+
+.footer{background:#0a0a14;padding:40px;text-align:center;color:rgba(255,255,255,.4)}
+.footer-logo{font-size:22px;font-weight:900;color:white;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="header">
+  <a href="/" class="logo">🌹 Zhanym</a>
+  <div class="nav">
+    <a href="/about">О нас</a>
+    <a href="/safety">Безопасность</a>
+    <a href="/register">Регистрация</a>
+    <a href="/login">Войти</a>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>💎 Наши подписки</h1>
+  <p>Переходи на Silver, Gold или Almaz и наслаждайся Zhanym по максимуму!</p>
+</div>
+
+<div class="plans">
+  <h2>Выбери свой план</h2>
+  <p>Начни бесплатно или открой супер возможности</p>
+  <div class="plans-grid">
+
+    <div class="plan">
+      <div class="plan-icon">⭐</div>
+      <h3>Zhanym Silver</h3>
+      <div class="price">1000 ₸<span>/месяц</span></div>
+      <ul>
+        <li>✅ Безлимит лайков на 7 дней</li>
+        <li>✅ Скрыть рекламу</li>
+        <li>✅ Режим инкогнито</li>
+        <li>✅ Отмена последнего свайпа</li>
+        <li>✅ Поиск по всему Казахстану</li>
+      </ul>
+      <a href="/register" class="plan-btn" style="background:linear-gradient(135deg,#C0C0C0,#888);color:white">Начать с Silver</a>
+    </div>
+
+    <div class="plan popular">
+      <div class="plan-badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:black">🔥 Популярный</div>
+      <div class="plan-icon">🥇</div>
+      <h3>Zhanym Gold</h3>
+      <div class="price">5000 ₸<span>/месяц</span></div>
+      <ul>
+        <li>✅ Всё из Silver</li>
+        <li>✅ Узнай кто тебя лайкнул</li>
+        <li>✅ Топ профили каждый день</li>
+        <li>✅ 5 суперлайков в неделю</li>
+        <li>✅ 1 буст в месяц</li>
+        <li>✅ Приоритет в поиске</li>
+      </ul>
+      <a href="/register" class="plan-btn" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:black">Начать с Gold</a>
+    </div>
+
+    <div class="plan best">
+      <div class="plan-badge" style="background:linear-gradient(135deg,#b9f2ff,#0099cc);color:black">💎 Лучший выбор</div>
+      <div class="plan-icon">💎</div>
+      <h3>Zhanym Almaz</h3>
+      <div class="price">7000 ₸<span>/месяц</span></div>
+      <ul>
+        <li>✅ Всё из Gold</li>
+        <li>✅ Сообщения до совпадения</li>
+        <li>✅ Приоритет лайков</li>
+        <li>✅ История лайков за 7 дней</li>
+        <li>✅ Безлимит суперлайков</li>
+        <li>✅ VIP поддержка 24/7</li>
+      </ul>
+      <a href="/register" class="plan-btn" style="background:linear-gradient(135deg,#b9f2ff,#0099cc);color:black">Начать с Almaz</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ТАБЛИЦА СРАВНЕНИЯ -->
+<div class="comparison">
+  <h2>Обзор подписок</h2>
+  <p>Сравни все возможности и выбери подходящий план</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Функции</th>
+          <th>🆓 Бесплатно</th>
+          <th>⭐ Silver</th>
+          <th>🥇 Gold</th>
+          <th>💎 Almaz</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Знакомства и общение</td><td><span class="dot dot-free"></span></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Безлимит лайков</td><td></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Отмена последнего свайпа</td><td></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Режим инкогнито</td><td></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Скрыть рекламу</td><td></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Поиск по всему Казахстану</td><td></td><td><span class="dot dot-silver"></span></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Суперлайки каждую неделю</td><td></td><td></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>1 буст в месяц</td><td></td><td></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Узнай кто тебя лайкнул</td><td></td><td></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Топ профили каждый день</td><td></td><td></td><td><span class="dot dot-gold"></span></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Сообщения до совпадения</td><td></td><td></td><td></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>Приоритет лайков</td><td></td><td></td><td></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>История лайков за 7 дней</td><td></td><td></td><td></td><td><span class="dot dot-almaz"></span></td></tr>
+        <tr><td>VIP поддержка 24/7</td><td></td><td></td><td></td><td><span class="dot dot-almaz"></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- О ZHANYM -->
+<div style="background:#111122;padding:60px 40px">
+<div class="about-section">
+  <h2>Что такое Zhanym?</h2>
+  <p>Zhanym — первое казахстанское приложение для знакомств, созданное специально для нас. Здесь ты найдёшь людей из своего города, которые говорят на твоём языке и разделяют твою культуру.</p>
+  <p>Zhanym — это целый мир возможностей для знакомств, дружбы и любви. Если ты хочешь встречаться с новыми людьми, расширять свой круг общения или искать вторую половинку — ты по адресу.</p>
+  <p>Знакомства в Zhanym — это удобно и весело. Свайпай вправо чтобы поставить лайк ❤️. Если другой человек сделает то же самое — вы создадите пару 💞. Откройся новому и общайся с теми кто тебе интересен!</p>
+  <div class="note">* Срок действия суперлайков и бустов, доступных через подписки Zhanym Gold и Zhanym Almaz, истекает если они не используются. Некоторые пользователи могут не получить ежемесячный буст из-за процедуры тестирования. Ознакомьтесь с подробной информацией о подписке в Zhanym чтобы узнать что в неё входит.</div>
+</div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">🌹 Zhanym</div>
+  <p>© 2026 Zhanym. Все права защищены.</p>
+</div>
+</body>
+</html>
