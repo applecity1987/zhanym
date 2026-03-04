@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поиск — Zhanym</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;padding-bottom:100px}
+.header{background:rgba(0,0,0,.6);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:100}
+.logo{font-size:22px;font-weight:bold;color:white;text-decoration:none}
+.nav a{margin-left:12px;text-decoration:none;color:rgba(255,255,255,.7);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.nav a:hover{background:rgba(255,255,255,.1)}
+.container{max-width:900px;margin:0 auto;padding:90px 20px 20px}
+.page-title{font-size:32px;font-weight:900;color:white;margin-bottom:5px}
+.page-sub{color:rgba(255,255,255,.4);font-size:15px;margin-bottom:30px}
+.filters{background:rgba(255,255,255,.05);border-radius:24px;padding:25px;margin-bottom:30px;border:1px solid rgba(255,255,255,.1)}
+.filters-title{font-size:16px;font-weight:bold;color:white;margin-bottom:20px}
+.filters-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.filter-group{display:flex;flex-direction:column;gap:8px}
+.filter-group label{font-size:11px;color:rgba(255,255,255,.5);font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+select{width:100%;padding:12px 15px;border:2px solid rgba(255,255,255,.1);border-radius:12px;font-size:14px;outline:none;background:rgba(255,255,255,.05);color:white;cursor:pointer}
+select:focus{border-color:#ff4458}
+select option{background:#1a1a2e}
+.gender-btns{display:flex;gap:10px}
+.gender-btn{flex:1;padding:12px;border:2px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-size:14px;font-weight:bold;cursor:pointer;transition:.2s;text-align:center}
+.gender-btn:hover{border-color:#ff4458;color:#ff4458}
+.gender-btn.active{border-color:#ff4458;background:rgba(255,68,88,.15);color:#ff4458}
+.age-range{display:flex;flex-direction:column;gap:8px}
+.age-values{display:flex;justify-content:space-between;align-items:center}
+.age-badge{background:rgba(255,68,88,.2);color:#ff4458;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:bold;border:1px solid rgba(255,68,88,.3)}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.1);border:none;padding:0;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#ff4458,#fd79a8);cursor:pointer;box-shadow:0 2px 8px rgba(255,68,88,.5)}
+.btn-search{width:100%;padding:16px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border:none;border-radius:50px;font-size:17px;font-weight:bold;cursor:pointer;margin-top:15px;transition:.2s}
+.btn-search:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,68,88,.4)}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.results-title{font-size:18px;font-weight:bold;color:white}
+.results-count{color:rgba(255,255,255,.4);font-size:14px}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:rgba(255,255,255,.05);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:.3s;position:relative}
+.card:hover{transform:translateY(-5px);border-color:rgba(255,68,88,.4);box-shadow:0 15px 40px rgba(255,68,88,.2)}
+.card-photo{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:60px;background:linear-gradient(135deg,#1a1a2e,#2d1b3d);position:relative;overflow:hidden}
+.card-photo img{width:100%;height:100%;object-fit:cover}
+.card-gradient{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.95),transparent)}
+.card-info{position:absolute;bottom:0;left:0;right:0;padding:15px}
+.card-name{font-size:18px;font-weight:900;color:white}
+.card-city{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px}
+.card-actions{display:flex;gap:8px;margin-top:10px}
+.btn-like{flex:1;padding:10px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border:none;border-radius:20px;font-size:13px;font-weight:bold;cursor:pointer;transition:.2s}
+.btn-like:hover{transform:scale(1.05)}
+.btn-like.liked{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);cursor:default}
+.btn-view{padding:10px 14px;background:rgba(255,255,255,.1);color:white;border:none;border-radius:20px;font-size:13px;cursor:pointer}
+.empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3)}
+.empty-icon{font-size:60px;margin-bottom:15px}
+.empty h3{font-size:20px;margin-bottom:8px;color:rgba(255,255,255,.5)}
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.4)}
+.spinner{width:40px;height:40px;border:3px solid rgba(255,68,88,.2);border-top-color:#ff4458;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 15px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,26,.95);display:flex;justify-content:center;gap:30px;padding:10px 0 20px;border-top:1px solid rgba(255,255,255,.1);z-index:40}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:rgba(255,255,255,.5);font-size:11px}
+.bottom-nav a.active,.bottom-nav a:hover{color:#ff6b6b}
+.bottom-nav a span{font-size:22px}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#ff4458;color:white;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:bold;z-index:999;opacity:0;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/" class="logo">🌹 Zhanym</a>
+  <div class="nav">
+    <a href="/dashboard">🔥 Лента</a>
+<a href="/chat">💬 Чат</a>
+<a href="#" onclick="logout()">Выйти</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="container">
+  <div class="page-title">🔍 Умный поиск</div>
+  <div class="page-sub">Найди своего человека среди тысяч анкет</div>
+
+  <div class="filters">
+    <div class="filters-title">⚙️ Фильтры поиска</div>
+    <div class="filters-grid">
+
+      <div class="filter-group">
+        <label>📍 Город</label>
+        <select id="city">
+          <option value="">Все города</option>
+          <option>Алматы</option><option>Астана</option><option>Шымкент</option>
+          <option>Қарағанды</option><option>Ақтөбе</option><option>Тараз</option>
+          <option>Павлодар</option><option>Өскемен</option><option>Семей</option>
+          <option>Атырау</option><option>Қостанай</option><option>Қызылорда</option>
+          <option>Орал</option><option>Петропавл</option><option>Ақтау</option>
+          <option>Темиртау</option><option>Түркістан</option><option>Көкшетау</option>
+          <option>Талдықорған</option><option>Екібастұз</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>❤️ Меня интересуют</label>
+        <div class="gender-btns">
+          <div class="gender-btn active" onclick="selectGender(this,'female')">Девушки</div>
+          <div class="gender-btn" onclick="selectGender(this,'male')">Парни</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>🎂 Возраст от</label>
+        <div class="age-range">
+          <div class="age-values">
+            <span style="color:rgba(255,255,255,.5);font-size:13px">18</span>
+            <span class="age-badge" id="minAgeVal">18 лет</span>
+            <span style="color:rgba(255,255,255,.5);font-size:13px">60</span>
+          </div>
+          <input type="range" id="minAge" min="18" max="60" value="18" oninput="document.getElementById('minAgeVal').textContent=this.value+' лет'">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>🎂 Возраст до</label>
+        <div class="age-range">
+          <div class="age-values">
+            <span style="color:rgba(255,255,255,.5);font-size:13px">18</span>
+            <span class="age-badge" id="maxAgeVal">40 лет</span>
+            <span style="color:rgba(255,255,255,.5);font-size:13px">60</span>
+          </div>
+          <input type="range" id="maxAge" min="18" max="60" value="40" oninput="document.getElementById('maxAgeVal').textContent=this.value+' лет'">
+        </div>
+      </div>
+
+    </div>
+    <button class="btn-search" onclick="doSearch()">🔍 Найти людей</button>
+  </div>
+
+  <div id="resultsSection" style="display:none">
+    <div class="results-header">
+      <div class="results-title">Результаты</div>
+      <div class="results-count" id="resultsCount"></div>
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+
+  <div class="loading" id="loading" style="display:none">
+    <div class="spinner"></div>
+    <div>Ищем людей...</div>
+  </div>
+
+  <div class="empty" id="empty" style="display:none">
+    <div class="empty-icon">😔</div>
+    <h3>Никого не нашли</h3>
+    <p>Попробуй изменить фильтры</p>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="/dashboard"><span>🔥</span>Свайпить</a>
+  <a href="/search" class="active"><span>🔍</span>Поиск</a>
+  <a href="/chat"><span>💬</span>Чат</a>
+  <a href="/profile"><span>👤</span>Профиль</a>
+</div>
+
+<script>
+
+const token = localStorage.getItem('token');
+if(!token) window.location.href = '/login';
+let selectedGender = 'female';
+let likedUsers = new Set();
+
+function logout(){ localStorage.removeItem('token'); window.location.href='/'; }
+function selectGender(el, gender){
+  document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  selectedGender = gender;
+}
+
+async function doSearch(){
+  const city = document.getElementById('city').value;
+  const minAge = document.getElementById('minAge').value;
+  const maxAge = document.getElementById('maxAge').value;
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('empty').style.display = 'none';
+
+  let url = `/search/?gender=${selectedGender}&min_age=${minAge}&max_age=${maxAge}`;
+  if(city) url += `&city=${encodeURIComponent(city)}`;
+
+  try {
+    const res = await fetch(url, {headers:{'Authorization':'Bearer '+token}});
+    const users = await res.json();
+    document.getElementById('loading').style.display = 'none';
+
+    if(!users.length){
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('resultsCount').textContent = `Найдено: ${users.length} человек`;
+    document.getElementById('resultsGrid').innerHTML = users.map(u => `
+      <div class="card">
+        <div class="card-photo">
+          ${u.photo && u.photo !== 'default.jpg'
+            ? `<img src="/static/uploads/${u.photo}">`
+            : `<span>${u.gender==='female'?'👩':'👨'}</span>`}
+          <div class="card-gradient"></div>
+          <div class="card-info">
+            <div class="card-name">${u.name}, ${u.age}</div>
+            <div class="card-city">📍 ${u.city||''}</div>
+            <div class="card-actions">
+              <button class="btn-like ${likedUsers.has(u.id)?'liked':''}" id="like-${u.id}" onclick="likeUser(${u.id})">
+                ${likedUsers.has(u.id)?'✓ Лайкнул':'❤️ Лайк'}
+              </button>
+              <button class="btn-view" onclick="viewProfile(${u.id})">👁</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('resultsSection').style.display = 'block';
+  } catch(e){
+    document.getElementById('loading').style.display = 'none';
+    showToast('Ошибка загрузки');
+  }
+}
+
+async function likeUser(userId){
+  const btn = document.getElementById('like-'+userId);
+  if(likedUsers.has(userId)) return;
+  try {
+    const res = await fetch(`/search/like/${userId}`, {method:'POST', headers:{'Authorization':'Bearer '+token}});
+    const data = await res.json();
+    likedUsers.add(userId);
+    btn.textContent = '✓ Лайкнул';
+    btn.classList.add('liked');
+    showToast(data.message.includes('Взаимный') ? '🎉 Это матч!' : '❤️ Лайк отправлен!');
+  } catch(e){ showToast('Ошибка'); }
+}
+function viewProfile(userId){
+window.location.href = `/profile/${userId}`;
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+doSearch();
+</script>
+</body>
+</html>

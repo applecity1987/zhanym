@@ -15,7 +15,7 @@ class User(Base):
     gender = Column(String)
     city = Column(String)
     bio = Column(Text)
-
+    height = Column(Integer, nullable=True)
     photo = Column(String, default="default.jpg")
     goal = Column(String, nullable=True)
     drink = Column(String, nullable=True)

@@ -78,28 +78,12 @@ body{font-family:'Arial',sans-serif;background:#1a1a2e;min-height:100vh;overflow
 </head>
 <body>
 
-<script>
-function toggleMenu(e){
-  e.preventDefault();
-  document.getElementById('dropMenu').classList.toggle('show');
-}
-document.addEventListener('click', function(e){
-  if(!e.target.closest('.dropdown')) document.getElementById('dropMenu').classList.remove('show');
-});
-</script>
+
 <!-- HEADER -->
 <div class="header">
 <div class="logo">🌹 Zhanym</div>
 <div class="nav-links" style="display:flex;gap:10px;align-items:center;margin-left:auto">
-  <div class="dropdown">
-    <a href="#" class="nav-pill" onclick="toggleMenu(event)">Супер Возможности ▾</a>
-    <div class="dropdown-menu" id="dropMenu">
-      <a href="/premium">📋 Наши подписки</a>
-<a href="/premium">⭐ Zhanym Silver</a>
-<a href="/premium">🥇 Zhanym Gold</a>
-<a href="/premium">💎 Zhanym Almaz</a>
-    </div>
-  </div>
+ <a href="/premium" class="nav-pill">Супер Возможности</a>
   <a href="/about" class="nav-pill">О нас</a>
   <a href="/safety" class="nav-pill">Безопасность</a>
   <a href="/register" class="nav-pill">Регистрация</a>

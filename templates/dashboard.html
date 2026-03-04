@@ -1,5 +1,4 @@
-html = open('/Users/darknet/dating-site/templates/dashboard.html', 'w', encoding='utf-8')
-html.write("""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -7,118 +6,145 @@ html.write("""<!DOCTYPE html>
 <title>Zhanym — Лента</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{font-family:Arial,sans-serif;background:#0a0a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
 /* HEADER */
-.header{background:rgba(0,0,0,.6);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:50}
+.header{background:rgba(255,255,255,.03);padding:12px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);position:fixed;top:0;width:100%;z-index:50}
 .logo{font-size:22px;font-weight:bold;color:white;text-decoration:none}
-.nav a{margin-left:12px;text-decoration:none;color:rgba(255,255,255,.7);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);transition:.2s}
-.nav a:hover{background:rgba(255,255,255,.1)}
+.nav a{margin-left:12px;text-decoration:none;color:rgba(255,255,255,.5);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1);transition:.2s}
+.nav a:hover{background:rgba(255,255,255,.1);color:white}
 
 /* MAIN */
-.main{flex:1;display:flex;align-items:center;justify-content:center;padding:55px 20px 140px;position:relative;z-index:1}
-position:relative;z-index:1 .header, .filters, .actions, .bottom-nav:
-.header{background:rgba(0,0,0,.6);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:50}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:70px 20px 150px;position:relative;z-index:5}
+
+/* CARD WRAP */
+.card-wrap{width:100%;max-width:420px;position:relative;perspective:1000px}
 
 /* CARD */
-.card-wrap{width:100%;max-width:460px;position:relative;z-index:2}
-.card-wrap{width:100%;max-width:400px;position:relative}
-.card{border-radius:24px;overflow:hidden;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab;transition:transform .3s;user-select:none}
+.card{border-radius:28px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 40px rgba(255,107,157,.15);cursor:grab;transition:transform .3s;user-select:none;border:1px solid rgba(255,255,255,.1)}
 .card:active{cursor:grabbing}
-.card-photo{width:100%;height:440px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#ff6b6b,#fd79a8)}
+.card-photo{width:100%;height:560px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#1a0a2e,#2d1b3d,#ff6b9d22)}
 .card-photo img{width:100%;height:100%;object-fit:cover}
-.card-gradient{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(0,0,0,.9),transparent)}
-.card-info{position:absolute;bottom:20px;left:0;right:0;padding:0 25px}
-.card-badge{display:inline-block;background:rgba(0,200,100,.85);color:white;font-size:12px;font-weight:bold;padding:5px 12px;border-radius:20px;margin-bottom:10px;backdrop-filter:blur(5px)}
-.card-name{font-size:32px;font-weight:900;color:white;text-shadow:0 2px 10px rgba(0,0,0,.5)}
-.card-city{color:rgba(255,255,255,.8);font-size:15px;margin-top:5px;display:flex;align-items:center;gap:5px}
-.card-bio{color:rgba(255,255,255,.7);font-size:14px;margin-top:8px;line-height:1.5}
 
-/* SWIPE INDICATORS */
-.swipe-like{position:absolute;top:40px;left:25px;background:rgba(0,200,100,.9);color:white;font-size:22px;font-weight:900;padding:10px 20px;border-radius:12px;border:3px solid #00c864;opacity:0;transform:rotate(-15deg);transition:.2s;letter-spacing:2px}
-.swipe-skip{position:absolute;top:40px;right:25px;background:rgba(255,50,50,.9);color:white;font-size:22px;font-weight:900;padding:10px 20px;border-radius:12px;border:3px solid #ff3232;opacity:0;transform:rotate(15deg);transition:.2s;letter-spacing:2px}
+/* GLASS OVERLAY */
+.card-glass{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,5,25,.97));pointer-events:none}
 
-/* PROGRESS BAR */
-.progress-bar{position:absolute;top:15px;left:15px;right:15px;display:flex;gap:4px}
-.progress-dot{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:3px}
-.progress-dot.active{background:white}
+/* CARD INFO */
+.card-info{position:absolute;bottom:0;left:0;right:0;padding:25px}
+.card-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,230,120,.2);color:#00e676;font-size:12px;font-weight:bold;padding:5px 12px;border-radius:20px;margin-bottom:12px;border:1px solid rgba(0,230,120,.3);backdrop-filter:blur(10px)}
+.card-name{font-size:34px;font-weight:900;color:white;text-shadow:0 2px 20px rgba(0,0,0,.8);letter-spacing:-0.5px}
+.card-bio{color:rgba(255,255,255,.65);font-size:14px;margin-top:8px;line-height:1.6}
+
+/* PROGRESS */
+.progress-bar{position:absolute;top:16px;left:16px;right:16px;display:flex;gap:5px;z-index:10}
+.progress-dot{flex:1;height:3px;background:rgba(255,255,255,.25);border-radius:3px}
+.progress-dot.active{background:white;box-shadow:0 0 8px rgba(255,255,255,.8)}
+
+/* SWIPE LABELS */
+.swipe-like{position:absolute;top:40px;left:25px;background:rgba(0,230,120,.15);color:#00e676;font-size:20px;font-weight:900;padding:10px 22px;border-radius:14px;border:3px solid #00e676;opacity:0;transform:rotate(-15deg);transition:.15s;letter-spacing:2px;backdrop-filter:blur(10px)}
+.swipe-skip{position:absolute;top:40px;right:25px;background:rgba(255,60,80,.15);color:#ff3c50;font-size:20px;font-weight:900;padding:10px 22px;border-radius:14px;border:3px solid #ff3c50;opacity:0;transform:rotate(15deg);transition:.15s;letter-spacing:2px;backdrop-filter:blur(10px)}
 
 /* ACTIONS */
-.actions{position:fixed;bottom:65px;left:50%;transform:translateX(-50%);display:flex;justify-content:center;align-items:center;gap:15px;padding:12px 30px;background:rgba(13,13,26,.85);border-radius:50px;backdrop-filter:blur(10px);z-index:50}
-.btn-action{border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;box-shadow:0 5px 20px rgba(0,0,0,.3)}
-.btn-action:hover{transform:scale(1.12)}
-.btn-back{width:50px;height:50px;background:rgba(255,255,255,.15);font-size:20px;backdrop-filter:blur(10px)}
-.btn-skip{width:65px;height:65px;background:white;font-size:28px;color:#ff4444}
-.btn-super{width:55px;height:55px;background:linear-gradient(135deg,#4facfe,#00f2fe);font-size:22px}
-.btn-like{width:65px;height:65px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);font-size:28px}
-.btn-boost{width:50px;height:50px;background:rgba(255,255,255,.15);font-size:20px;backdrop-filter:blur(10px)}
+.actions{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);display:flex;justify-content:center;align-items:center;gap:16px;padding:14px 32px;background:rgba(10,10,26,.7);border-radius:50px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.btn-action{border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s;box-shadow:0 5px 20px rgba(0,0,0,.4)}
+.btn-action:hover{transform:scale(1.15)}
+.btn-back{width:52px;height:52px;background:rgba(255,255,255,.1);font-size:20px;border:1px solid rgba(255,255,255,.15)}
+.btn-skip{width:68px;height:68px;background:white;font-size:28px;color:#ff3c50;box-shadow:0 5px 25px rgba(255,60,80,.3)}
+.btn-super{width:56px;height:56px;background:linear-gradient(135deg,#4facfe,#00f2fe);font-size:22px;box-shadow:0 5px 25px rgba(79,172,254,.4)}
+.btn-like{width:68px;height:68px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);font-size:28px;box-shadow:0 5px 25px rgba(255,107,107,.5)}
+.btn-boost{width:52px;height:52px;background:rgba(255,255,255,.1);font-size:20px;border:1px solid rgba(255,255,255,.15)}
 
 /* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,26,.95);display:flex;justify-content:center;gap:30px;padding:10px 0 20px;border-top:1px solid rgba(255,255,255,.1);z-index:40}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:rgba(255,255,255,.5);font-size:11px;transition:.2s}
-.bottom-nav a.active,.bottom-nav a:hover{color:#ff6b6b}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,26,.9);display:flex;justify-content:center;gap:40px;padding:12px 0 16px;border-top:1px solid rgba(255,255,255,.08);z-index:40;backdrop-filter:blur(20px)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:rgba(255,255,255,.4);font-size:11px;transition:.2s}
+.bottom-nav a.active,.bottom-nav a:hover{color:#ff6b9d}
 .bottom-nav a span{font-size:22px}
 
-/* FILTERS */
-.filters{position:fixed;top:60px;left:0;right:0;padding:10px 20px;display:flex;gap:10px;z-index:40;justify-content:center}
-.filters select{padding:7px 14px;border:none;border-radius:20px;font-size:13px;background:rgba(255,255,255,.15);color:white;backdrop-filter:blur(10px);outline:none;cursor:pointer}
-.filters select option{background:#1a1a2e;color:white}
-.filters button{padding:7px 18px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white;border:none;border-radius:20px;font-size:13px;cursor:pointer;font-weight:bold}
-
 /* EMPTY */
-.empty{text-align:center;color:rgba(255,255,255,.6);padding:40px 20px}
+.empty{text-align:center;color:rgba(255,255,255,.5);padding:40px 20px}
+.empty-icon{font-size:80px;margin-bottom:20px;animation:float 3s ease-in-out infinite;display:block}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
 .empty h2{font-size:26px;margin-bottom:10px;color:white}
 
 /* MATCH POPUP */
-.match-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;flex-direction:column}
-.match-popup.show{display:flex}
-.match-title{font-size:48px;font-weight:900;color:white;margin-bottom:10px}
-.match-sub{color:rgba(255,255,255,.7);font-size:18px;margin-bottom:30px}
-.match-avatars{display:flex;gap:20px;margin-bottom:30px;font-size:80px}
-.match-btn{padding:15px 45px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin:5px}
-.match-btn-chat{background:transparent;border:2px solid white;color:white}
+.match-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;flex-direction:column;backdrop-filter:blur(20px)}
+.match-popup.show{display:flex;animation:popIn .4s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.match-glow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,107,157,.3),transparent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.match-title{font-size:52px;font-weight:900;color:white;margin-bottom:10px;position:relative;z-index:1;text-shadow:0 0 30px rgba(255,107,157,.8)}
+.match-sub{color:rgba(255,255,255,.7);font-size:18px;margin-bottom:30px;position:relative;z-index:1}
+.match-avatars{display:flex;gap:20px;margin-bottom:35px;font-size:80px;position:relative;z-index:1}
+.match-btn{padding:16px 48px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin:6px;position:relative;z-index:1;box-shadow:0 8px 25px rgba(255,107,107,.4);transition:.2s}
+.match-btn:hover{transform:translateY(-2px)}
+.match-btn-chat{background:transparent;border:2px solid rgba(255,255,255,.4);color:white;box-shadow:none}
+
+/* FILTERS скрыты но работают */
+.filters{display:none}
 </style>
 </head>
 <body>
 
-<canvas id="stars" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+<canvas id="stars"></canvas>
+
 <script>
-const c=document.getElementById('stars'),ctx=c.getContext('2d');
-c.width=window.innerWidth;c.height=window.innerHeight;
-const stars=Array.from({length:150},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,o:Math.random(),s:Math.random()*.003+.001}));
-const particles=Array.from({length:20},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*3+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,o:Math.random()*.5}));
-function draw(){
-  ctx.clearRect(0,0,c.width,c.height);
+const c = document.getElementById('stars'), ctx = c.getContext('2d');
+c.width = window.innerWidth; c.height = window.innerHeight;
+
+const stars = Array.from({length:350}, () => ({
+  x: Math.random()*c.width - c.width/2,
+  y: Math.random()*c.height - c.height/2,
+  z: Math.random()*c.width, pz:0
+}));
+
+const nebula = [
+  {x:c.width*.2, y:c.height*.3, r:250, hue:280, o:.05},
+  {x:c.width*.8, y:c.height*.7, r:300, hue:320, o:.04},
+  {x:c.width*.5, y:c.height*.5, r:200, hue:260, o:.03},
+];
+
+function drawSpace(){
+  ctx.fillStyle='rgba(10,10,26,.25)';
+  ctx.fillRect(0,0,c.width,c.height);
+  nebula.forEach(n=>{
+    const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+    g.addColorStop(0,`hsla(${n.hue},80%,60%,${n.o})`);
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath();
+    ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
+  });
   stars.forEach(s=>{
-    s.o+=s.s; if(s.o>1||s.o<0) s.s*=-1;
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${s.o})`;ctx.fill();
+    s.pz=s.z; s.z-=2.5;
+    if(s.z<=0){s.x=Math.random()*c.width-c.width/2;s.y=Math.random()*c.height-c.height/2;s.z=c.width;s.pz=s.z;}
+    const sx=(s.x/s.z)*c.width+c.width/2;
+    const sy=(s.y/s.z)*c.height+c.height/2;
+    const px=(s.x/s.pz)*c.width+c.width/2;
+    const py=(s.y/s.pz)*c.height+c.height/2;
+    const size=Math.max(.5,(1-s.z/c.width)*3);
+    const bright=1-s.z/c.width;
+    ctx.strokeStyle=`rgba(255,255,255,${bright})`;
+    ctx.lineWidth=size;
+    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(sx,sy); ctx.stroke();
   });
-  particles.forEach(p=>{
-    p.x+=p.dx;p.y+=p.dy;
-    if(p.x<0||p.x>c.width) p.dx*=-1;
-    if(p.y<0||p.y>c.height) p.dy*=-1;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,100,150,${p.o})`;ctx.fill();
-  });
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawSpace);
 }
-draw();
+drawSpace();
 window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;});
 </script>
 
 <div class="header">
   <a href="/" class="logo">🌹 Zhanym</a>
   <div class="nav">
-    <a href="/chat">💬 Чат</a>
+    <a href="/chat" id="chatLink">💬 Чат</a>
     <a href="/profile">👤 Профиль</a>
     <a href="#" onclick="logout()">Выйти</a>
   </div>
 </div>
 
 <div class="filters">
-  <select id="gender"><option value="">👥 Все</option><option value="male">👨 Мужчины</option><option value="female">👩 Женщины</option></select>
-  <select id="city_filter"><option value="">🏙️ Все города</option><option>Алматы</option><option>Астана</option><option>Шымкент</option><option>Қарағанды</option><option>Павлодар</option><option>Өскемен</option><option>Атырау</option><option>Ақтөбе</option></select>
+  <select id="gender"><option value="">Все</option><option value="male">Мужчины</option><option value="female">Женщины</option></select>
+  <select id="city_filter"><option value="">Все города</option></select>
   <button onclick="loadUsers()">Найти</button>
 </div>
 
@@ -133,29 +159,30 @@ window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.
   <button class="btn-action btn-skip" onclick="skip()" title="Пропустить">✕</button>
   <button class="btn-action btn-super" onclick="superLike()" title="Суперлайк">⭐</button>
   <button class="btn-action btn-like" onclick="likeUser()" title="Лайк">❤️</button>
-  <button class="btn-action btn-boost" title="Буст">⚡</button>
+  <button class="btn-action btn-boost" onclick="boostClick()" title="Буст">⚡</button>
+
 </div>
 
 <div class="bottom-nav">
   <a href="/dashboard" class="active"><span>🔥</span>Свайпить</a>
-  <a href="/search"><span>🔍</span>Обзор</a>
-  <a href="#"><span>💛</span>Лайки</a>
-  <a href="/chat"><span>💬</span>Чат</a>
+  <a href="/search"><span>🔍</span>Поиск</a>
+  <a href="/likes"><span>💛</span>Лайки</a>
+  <a href="/chat"><span>✍🏻</span>Написать</a>
   <a href="/profile"><span>👤</span>Профиль</a>
 </div>
 
 <div class="match-popup" id="matchPopup">
+  <div class="match-glow"></div>
   <div class="match-title">💞 Это Пара!</div>
   <div class="match-sub">Вы понравились друг другу!</div>
-  <div class="match-avatars" id="matchAvatars">👨👩</div>
+  <div class="match-avatars" id="matchAvatars">👨💞👩</div>
   <button class="match-btn match-btn-chat" onclick="goToChat()">💬 Написать</button>
-  <button class="match-btn" onclick="closeMatch()">Продолжить</button>
+  <button class="match-btn" onclick="closeMatch()">Продолжить ✨</button>
 </div>
 
 <script>
 const token = localStorage.getItem('token');
 if(!token) window.location.href = '/login';
-
 let users = [], currentIndex = 0, currentUser = null;
 
 async function loadUsers() {
@@ -180,15 +207,20 @@ function showCard() {
   const actions = document.getElementById('actions');
   if(currentIndex >= users.length){
     actions.style.display = 'none';
-    container.innerHTML = '<div class="empty"><div style="font-size:80px;margin-bottom:20px">💔</div><h2>Никого нет</h2><p>Попробуй изменить фильтры или зайди позже</p></div>';
+    container.innerHTML = `
+      <div class="empty">
+        <span class="empty-icon">💫</span>
+        <h2>Никого нет</h2>
+        <p style="color:rgba(255,255,255,.4)">Попробуй изменить фильтры<br>или зайди позже</p>
+      </div>`;
     return;
   }
   currentUser = users[currentIndex];
   actions.style.display = 'flex';
 
-  const photoHTML = currentUser.photo
-    ? '<img src="/static/uploads/'+currentUser.photo+'" style="width:100%;height:100%;object-fit:cover">'
-    : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#ff6b6b,#fd79a8)">'+getEmoji(currentUser.gender)+'</div>';
+  const photoHTML = currentUser.photo && currentUser.photo !== 'default.jpg'
+    ? `<img src="/static/uploads/${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:130px;background:linear-gradient(135deg,#1a0a2e,#3d1b4d,#ff6b9d22)">${getEmoji(currentUser.gender)}</div>`;
 
   container.innerHTML = `
     <div class="card" id="card">
@@ -200,7 +232,7 @@ function showCard() {
         <div class="progress-dot"></div>
       </div>
       <div class="card-photo">${photoHTML}</div>
-      <div class="card-gradient"></div>
+      <div class="card-glass"></div>
       <div class="card-info">
         <div class="card-badge">📍 ${currentUser.city||'Казахстан'}</div>
         <div class="card-name">${currentUser.name}, ${currentUser.age}</div>
@@ -219,33 +251,32 @@ function initSwipe() {
   document.addEventListener('mousemove', e => {
     if(!isDragging) return;
     currentX = e.clientX - startX;
-    card.style.transform = `translateX(${currentX}px) rotate(${currentX*0.05}deg)`;
+    card.style.transform = `translateX(${currentX}px) rotate(${currentX*0.04}deg)`;
     document.getElementById('swipeLike').style.opacity = currentX > 30 ? Math.min((currentX-30)/50,1) : 0;
     document.getElementById('swipeSkip').style.opacity = currentX < -30 ? Math.min((-currentX-30)/50,1) : 0;
   });
   document.addEventListener('mouseup', () => {
     if(!isDragging) return;
     isDragging = false;
-    if(currentX > 80) { animateCard('right'); likeUser(); }
-    else if(currentX < -80) { animateCard('left'); skip(); }
+    if(currentX > 80){ animateCard('right'); likeUser(); }
+    else if(currentX < -80){ animateCard('left'); skip(); }
     else { card.style.transform = ''; }
     currentX = 0;
   });
 
-  // Touch
   card.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = true; });
   card.addEventListener('touchmove', e => {
     if(!isDragging) return;
     currentX = e.touches[0].clientX - startX;
-    card.style.transform = `translateX(${currentX}px) rotate(${currentX*0.05}deg)`;
+    card.style.transform = `translateX(${currentX}px) rotate(${currentX*0.04}deg)`;
     document.getElementById('swipeLike').style.opacity = currentX > 30 ? Math.min((currentX-30)/50,1) : 0;
     document.getElementById('swipeSkip').style.opacity = currentX < -30 ? Math.min((-currentX-30)/50,1) : 0;
   });
   card.addEventListener('touchend', () => {
     if(!isDragging) return;
     isDragging = false;
-    if(currentX > 80) { animateCard('right'); likeUser(); }
-    else if(currentX < -80) { animateCard('left'); skip(); }
+    if(currentX > 80){ animateCard('right'); likeUser(); }
+    else if(currentX < -80){ animateCard('left'); skip(); }
     else { card.style.transform = ''; }
     currentX = 0;
   });
@@ -253,12 +284,22 @@ function initSwipe() {
 
 function animateCard(dir) {
   const card = document.getElementById('card');
-  if(card) card.style.transform = `translateX(${dir==='right'?500:-500}px) rotate(${dir==='right'?30:-30}deg)`;
+  if(card){ card.style.transition='transform .4s ease'; card.style.transform=`translateX(${dir==='right'?600:-600}px) rotate(${dir==='right'?35:-35}deg)`; }
 }
 
-function skip(){ currentIndex++; setTimeout(showCard, 300); }
+function skip(){ currentIndex++; setTimeout(showCard, 350); }
 function goBack(){ if(currentIndex>0){ currentIndex--; showCard(); } }
-function superLike(){ if(currentUser) likeUser(); }
+function superLike(){
+  if(!currentUser) return;
+  const today = new Date().toDateString();
+  const lastSuper = localStorage.getItem('lastSuperLike');
+  if(lastSuper === today){
+    showPremiumPopup('⭐ Суперлайк');
+    return;
+  }
+  localStorage.setItem('lastSuperLike', today);
+  likeUser();
+}
 
 async function likeUser() {
   if(!currentUser) return;
@@ -266,21 +307,65 @@ async function likeUser() {
     const res = await fetch('/search/like/'+currentUser.id, {method:'POST', headers:{'Authorization':'Bearer '+token}});
     const data = await res.json();
     if(data.message && data.message.includes('Пара')){
-      document.getElementById('matchAvatars').innerHTML = '👨💞👩';
       document.getElementById('matchPopup').classList.add('show');
     } else {
-      currentIndex++; setTimeout(showCard, 300);
+      currentIndex++; setTimeout(showCard, 350);
     }
-  } catch(e){ currentIndex++; setTimeout(showCard, 300); }
+  } catch(e){ currentIndex++; setTimeout(showCard, 350); }
 }
 
+
+
+function goToPremium(){ window.location.href='/premium'; }
+function closePremium(){ document.getElementById('premiumPopup').classList.remove('show'); document.getElementById('premiumPopup').style.display='none'; }
 function closeMatch(){ document.getElementById('matchPopup').classList.remove('show'); currentIndex++; showCard(); }
 function goToChat(){ window.location.href='/chat'; }
 function logout(){ localStorage.removeItem('token'); window.location.href='/'; }
 
+
+async function loadUnread() {
+  try {
+    const res = await fetch('/chat/unread', {headers:{'Authorization':'Bearer '+token}});
+    const data = await res.json();
+    if(data.count > 0){
+      document.getElementById('chatLink').innerHTML =
+        `💬 Чат <span style="background:#ff4458;color:white;font-size:11px;font-weight:bold;padding:2px 7px;border-radius:50px;margin-left:4px">${data.count}</span>`;
+    }
+  } catch(e){}
+}
+
+loadUnread();
+setInterval(loadUnread, 10000); // обновляем каждые 10 сек
+
 loadUsers();
+
+function boostClick(){
+  showPremiumPopup('⚡ Буст');
+}
+
+function showPremiumPopup(feature){
+  window.location.href='/subscription';
+}
+
+
 </script>
+<div class="match-popup" id="premiumPopup" style="display:none">
+  <div class="match-glow" style="background:radial-gradient(circle,rgba(255,215,0,.3),transparent)"></div>
+  <div style="font-size:60px;margin-bottom:15px;position:relative;z-index:1">👑</div>
+  <div class="match-title" style="font-size:36px">Zhanym Premium</div>
+  <div class="match-sub" id="premiumFeature"></div>
+  <div style="position:relative;z-index:1;background:rgba(255,255,255,.05);border-radius:24px;padding:25px;margin:0 20px 25px;border:1px solid rgba(255,255,255,.1);text-align:center">
+    <div style="font-size:42px;font-weight:900;color:white;margin-bottom:5px">990 ₸<span style="font-size:18px;opacity:.6">/мес</span></div>
+    <div style="color:rgba(255,255,255,.5);font-size:14px;margin-bottom:20px">Безлимитные суперлайки и бусты</div>
+    <div style="display:flex;flex-direction:column;gap:10px;text-align:left;color:rgba(255,255,255,.7);font-size:14px">
+      <div>⭐ Безлимитные суперлайки</div>
+      <div>⚡ Буст профиля каждый день</div>
+      <div>👁 Кто тебя лайкнул</div>
+      <div>🔄 Отмена последнего свайпа</div>
+    </div>
+  </div>
+  <button class="match-btn" onclick="goToPremium()">👑 Оформить подписку</button>
+  <button class="match-btn match-btn-chat" onclick="closePremium()">Позже</button>
+</div>
 </body>
-</html>""")
-html.close()
-print('Done')
+</html>

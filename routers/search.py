@@ -35,7 +35,16 @@ def get_matches(current_user = Depends(get_current_user), db: Session = Depends(
     liked_me = [r[0] for r in db.query(models.Like.liker_id).filter(models.Like.liked_id == current_user.id).all()]
     match_ids = list(set(i_liked) & set(liked_me))
     matches = db.query(models.User).filter(models.User.id.in_(match_ids)).all()
-    return [{"id": u.id, "name": u.name, "age": u.age, "gender": u.gender, "city": u.city} for u in matches]
+    return [{"id": u.id, "name": u.name, "age": u.age, "gender": u.gender, "city": u.city, "photo": u.photo} for u in
+            matches]
+
+@router.get("/who_liked_me")
+def who_liked_me(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+    liked_me = db.query(models.Like.liker_id).filter(models.Like.liked_id == current_user.id).all()
+    liker_ids = [r[0] for r in liked_me]
+    users = db.query(models.User).filter(models.User.id.in_(liker_ids)).all()
+    return [{"id": u.id, "name": u.name, "age": u.age, "gender": u.gender, "city": u.city, "photo": u.photo} for u in users]
+
 
 @router.post("/like/{user_id}")
 def like_user(

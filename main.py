@@ -1,4 +1,5 @@
 
+from fastapi.responses import HTMLResponse
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
@@ -84,6 +85,31 @@ async def chat_page():
     with open("templates/chat.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
+@app.get("/edit_profile", response_class=HTMLResponse)
+async def edit_profile_page():
+    with open("templates/edit_profile.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/search", response_class=HTMLResponse)
+async def search_page():
+    with open("templates/search.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/profile/{user_id}", response_class=HTMLResponse)
+async def user_profile_page(user_id: int):
+    with open("templates/user.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+
+@app.get("/likes", response_class=HTMLResponse)
+async def likes_page():
+    with open("templates/likes.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/subscription", response_class=HTMLResponse)
+async def subscription_page():
+    with open("templates/subscription.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
 
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):

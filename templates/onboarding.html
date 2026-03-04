@@ -311,11 +311,11 @@ function selectInterest(el){
     el.classList.remove('selected');
     interestCount--;
   } else {
-    if(interestCount >= 10) return;
+    if(interestCount >= 20) return;
     el.classList.add('selected');
     interestCount++;
   }
-  document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+'/10';
+  document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+'/20';
   document.getElementById('btn4').textContent = 'Далее '+interestCount+'/10';
 }
 
@@ -390,7 +390,6 @@ function getSelected(stepId, group){
 function getInterests(){
   const selected = document.querySelectorAll('#step4 .tag.selected');
   return Array.from(selected).map(t=>t.textContent.trim()).join(',');
-}
 }
 </script>
 </body>

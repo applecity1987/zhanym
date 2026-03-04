@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профиль</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0a0a1a;min-height:100vh;padding-bottom:40px}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.container{max-width:500px;margin:0 auto;padding:20px;position:relative;z-index:5}
+.back{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.6);text-decoration:none;font-size:14px;margin-bottom:20px;padding:8px 16px;border:1px solid rgba(255,255,255,.1);border-radius:20px;transition:.2s}
+.back:hover{background:rgba(255,255,255,.1);color:white}
+.hero{border-radius:28px;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.1)}
+.hero-photo{width:100%;height:480px;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#1a0a2e,#3d1b4d)}
+.hero-photo img{width:100%;height:100%;object-fit:cover}
+.hero-glass{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,5,25,.97))}
+.hero-info{position:absolute;bottom:25px;left:25px;right:25px}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,230,120,.2);color:#00e676;font-size:12px;font-weight:bold;padding:5px 12px;border-radius:20px;margin-bottom:10px;border:1px solid rgba(0,230,120,.3)}
+.hero-name{font-size:36px;font-weight:900;color:white}
+.hero-bio{color:rgba(255,255,255,.6);font-size:14px;margin-top:8px;line-height:1.6}
+.section{background:rgba(255,255,255,.04);border-radius:20px;padding:20px;margin-bottom:15px;border:1px solid rgba(255,255,255,.08)}
+.section-title{font-size:15px;font-weight:bold;color:white;margin-bottom:15px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:rgba(255,68,88,.15);color:#ff4458;padding:7px 14px;border-radius:50px;font-size:13px;border:1px solid rgba(255,68,88,.3)}
+.btn-like{width:100%;padding:16px;background:linear-gradient(135deg,#ff6b6b,#fd79a8);color:white;border:none;border-radius:50px;font-size:17px;font-weight:bold;cursor:pointer;transition:.2s;box-shadow:0 8px 25px rgba(255,107,107,.4)}
+.btn-like:hover{transform:translateY(-2px)}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<script>
+const c=document.getElementById('stars'),ctx=c.getContext('2d');
+c.width=window.innerWidth;c.height=window.innerHeight;
+const stars=Array.from({length:250},()=>({x:Math.random()*c.width-c.width/2,y:Math.random()*c.height-c.height/2,z:Math.random()*c.width,pz:0}));
+function draw(){
+  ctx.fillStyle='rgba(10,10,26,.25)';ctx.fillRect(0,0,c.width,c.height);
+  stars.forEach(s=>{
+    s.pz=s.z;s.z-=2.5;
+    if(s.z<=0){s.x=Math.random()*c.width-c.width/2;s.y=Math.random()*c.height-c.height/2;s.z=c.width;s.pz=s.z;}
+    const sx=(s.x/s.z)*c.width+c.width/2,sy=(s.y/s.z)*c.height+c.height/2;
+    const px=(s.x/s.pz)*c.width+c.width/2,py=(s.y/s.pz)*c.height+c.height/2;
+    const size=Math.max(.5,(1-s.z/c.width)*3),bright=1-s.z/c.width;
+    ctx.strokeStyle=`rgba(255,255,255,${bright})`;ctx.lineWidth=size;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(sx,sy);ctx.stroke();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+<div class="container">
+  <a href="javascript:history.back()" class="back">← Назад</a>
+  <div class="hero" id="hero">
+    <div class="hero-photo" id="heroPhoto"><span id="heroEmoji">👤</span></div>
+    <div class="hero-glass"></div>
+    <div class="hero-info">
+      <div class="hero-badge" id="heroBadge">📍</div>
+      <div class="hero-name" id="heroName">Загрузка...</div>
+      <div class="hero-bio" id="heroBio"></div>
+    </div>
+  </div>
+
+  <div class="section" id="anketa" style="display:none">
+    <div class="section-title">📋 Анкета</div>
+    <div class="tags" id="anketaTags"></div>
+  </div>
+
+  <button class="btn-like" onclick="likeUser()">❤️ Лайкнуть</button>
+</div>
+
+<script>
+const token = localStorage.getItem('token');
+if(!token) window.location.href = '/login';
+const userId = window.location.pathname.split('/').pop();
+
+async function loadUser() {
+  const res = await fetch('/users/'+userId, {headers:{'Authorization':'Bearer '+token}});
+  if(!res.ok){ document.body.innerHTML='<p style="color:white;padding:40px">Пользователь не найден</p>'; return; }
+  const u = await res.json();
+
+  document.getElementById('heroName').textContent = u.name+', '+u.age;
+  document.getElementById('heroBadge').textContent = '📍 '+(u.city||'Казахстан');
+  document.getElementById('heroBio').textContent = u.bio||'';
+
+  if(u.photo && u.photo !== 'default.jpg'){
+    document.getElementById('heroPhoto').innerHTML = `<img src="/static/uploads/${u.photo}">`;
+  } else {
+    document.getElementById('heroEmoji').textContent = u.gender==='female'?'👩':'👨';
+  }
+
+  const fields = [
+    {icon:'💘', val:u.goal},{icon:'📏', val:u.height ? u.height+' см' : null},
+    {icon:'🍷', val:u.drink},{icon:'🚬', val:u.smoke},
+    {icon:'🏋️', val:u.sport},{icon:'🐾', val:u.pet},{icon:'💬', val:u.communication},
+    {icon:'❤️', val:u.love_language},{icon:'🎓', val:u.education},{icon:'🌙', val:u.zodiac}
+  ];
+
+  const tags = fields.filter(f=>f.val);
+  if(u.interests) u.interests.split(',').forEach(i=>tags.push({icon:'✨',val:i.trim()}));
+  if(tags.length){
+    document.getElementById('anketaTags').innerHTML = tags.map(t=>`<span class="tag">${t.icon} ${t.val}</span>`).join('');
+    document.getElementById('anketa').style.display = 'block';
+  }
+}
+
+async function likeUser(){
+  const res = await fetch('/search/like/'+userId, {method:'POST', headers:{'Authorization':'Bearer '+token}});
+  const data = await res.json();
+  alert(data.message);
+}
+
+loadUser();
+</script>
+</body>
+</html>
