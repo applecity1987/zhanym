@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhanym Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0d1a; --card:#13132b; --border:rgba(255,255,255,.08);
+  --pink:#ff4d6d; --pink2:#ff85a1; --gold:#ffd60a;
+  --green:#06d6a0; --blue:#4cc9f0; --red:#ff4444;
+  --text:rgba(255,255,255,.85); --sub:rgba(255,255,255,.4);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px 32px;width:100%;max-width:380px;text-align:center}
+.login-logo{font-size:48px;margin-bottom:12px}
+.login-title{font-size:28px;font-weight:900;margin-bottom:4px}
+.login-title span{color:var(--pink)}
+.login-sub{color:var(--sub);font-size:14px;margin-bottom:28px}
+.login-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:14px;color:white;font-size:16px;font-family:'Nunito',sans-serif;outline:none;margin-bottom:14px}
+.login-input:focus{border-color:var(--pink)}
+.login-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--pink),var(--pink2));border:none;border-radius:50px;color:white;font-size:16px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.login-error{color:var(--pink);font-size:13px;margin-top:10px;display:none}
+
+/* MAIN LAYOUT */
+.app{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:20px;font-weight:900}
+.topbar-logo span{color:var(--pink)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.logout-btn{padding:8px 16px;background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.3);border-radius:20px;color:var(--pink);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* TABS */
+.tabs{display:flex;gap:4px;padding:16px 24px;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:10px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.2s;border:none;background:transparent;color:var(--sub);font-family:'Nunito',sans-serif}
+.tab.active{background:rgba(255,77,109,.15);color:var(--pink);border:1px solid rgba(255,77,109,.3)}
+
+/* CONTENT */
+.content{padding:24px;max-width:1200px;margin:0 auto;width:100%}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center}
+.stat-icon{font-size:32px;margin-bottom:8px}
+.stat-num{font-size:28px;font-weight:900;margin-bottom:4px}
+.stat-label{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
+.stat-card.pink .stat-num{color:var(--pink)}
+.stat-card.gold .stat-num{color:var(--gold)}
+.stat-card.green .stat-num{color:var(--green)}
+.stat-card.blue .stat-num{color:var(--blue)}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.charts-grid{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px}
+.chart-title{font-size:15px;font-weight:800;margin-bottom:16px}
+.bar-wrap{display:flex;flex-direction:column;gap:10px}
+.bar-item{display:flex;align-items:center;gap:12px}
+.bar-label{font-size:13px;font-weight:700;width:80px;flex-shrink:0}
+.bar-track{flex:1;background:rgba(255,255,255,.06);border-radius:6px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:800;color:white;transition:width .6s ease;min-width:24px}
+.bar-count{font-size:13px;font-weight:700;color:var(--sub);width:30px;text-align:right}
+
+/* GENDER PIE */
+.pie-row{display:flex;gap:20px;align-items:center;justify-content:center;padding:10px 0}
+.pie-circle{width:120px;height:120px;border-radius:50%;flex-shrink:0;position:relative}
+.pie-legend{display:flex;flex-direction:column;gap:10px}
+.pie-legend-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.pie-dot{width:12px;height:12px;border-radius:50%}
+
+/* SEARCH */
+.search-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.search-input{flex:1;min-width:200px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:white;font-size:14px;font-family:'Nunito',sans-serif;outline:none}
+.search-input:focus{border-color:var(--pink)}
+.filter-btn{padding:12px 18px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s}
+.filter-btn.active{background:rgba(255,77,109,.12);border-color:rgba(255,77,109,.4);color:var(--pink)}
+
+/* USERS TABLE */
+.users-list{display:flex;flex-direction:column;gap:10px}
+.user-row{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.2s}
+.user-row:hover{border-color:rgba(255,77,109,.3);background:rgba(255,77,109,.04)}
+.user-row.blocked{opacity:.5;border-color:var(--red)}
+.user-avatar{width:48px;height:48px;border-radius:14px;object-fit:cover;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.user-avatar img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px}
+.user-meta{font-size:12px;color:var(--sub);margin-top:2px}
+.badge-sub{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.badge-silver{background:rgba(180,180,200,.15);color:#c0c0d0;border:1px solid rgba(180,180,200,.3)}
+.badge-gold{background:rgba(255,214,10,.12);color:var(--gold);border:1px solid rgba(255,214,10,.3)}
+.badge-almaz{background:rgba(76,201,240,.12);color:var(--blue);border:1px solid rgba(76,201,240,.3)}
+.badge-blocked{background:rgba(255,68,68,.12);color:var(--red);border:1px solid rgba(255,68,68,.3)}
+.user-gender{font-size:18px}
+.user-actions{display:flex;gap:8px;align-items:center}
+.btn-detail{padding:8px 14px;background:rgba(76,201,240,.1);border:1px solid rgba(76,201,240,.3);border-radius:10px;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+.btn-block{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;border:none}
+.btn-block.block{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:var(--red)}
+.btn-block.unblock{background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.3);color:var(--green)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(10px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:24px;width:100%;max-width:600px;overflow:hidden;margin:auto}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.modal-photo{width:60px;height:60px;border-radius:16px;object-fit:cover;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.modal-photo img{width:100%;height:100%;object-fit:cover;border-radius:16px}
+.modal-name{font-size:20px;font-weight:900}
+.modal-sub{font-size:13px;color:var(--sub)}
+.modal-close{margin-left:auto;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:white;font-size:18px;cursor:pointer}
+.modal-body{padding:20px 24px;max-height:70vh;overflow-y:auto}
+.section{margin-bottom:20px}
+.section-title{font-size:12px;font-weight:800;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-item{background:rgba(255,255,255,.04);border-radius:12px;padding:10px 14px}
+.info-key{font-size:11px;color:var(--sub);font-weight:700;margin-bottom:2px}
+.info-val{font-size:14px;font-weight:700}
+.likes-list{display:flex;flex-wrap:wrap;gap:6px}
+.like-chip{padding:6px 12px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);border-radius:20px;font-size:12px;font-weight:700;color:var(--pink)}
+.messages-list{display:flex;flex-direction:column;gap:8px;max-height:250px;overflow-y:auto}
+.msg{padding:10px 14px;border-radius:14px;font-size:13px;max-width:80%}
+.msg.me{background:linear-gradient(135deg,rgba(255,77,109,.2),rgba(255,133,161,.15));align-self:flex-end;margin-left:auto}
+.msg.other{background:rgba(255,255,255,.06);align-self:flex-start}
+.msg-who{font-size:11px;font-weight:700;opacity:.6;margin-bottom:3px}
+.empty-list{color:var(--sub);font-size:13px;text-align:center;padding:16px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px}
+.modal-btn{flex:1;padding:14px;border:none;border-radius:50px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.modal-btn-block{background:rgba(255,68,68,.15);color:var(--red);border:1px solid rgba(255,68,68,.3)}
+.modal-btn-unblock{background:rgba(6,214,160,.15);color:var(--green);border:1px solid rgba(6,214,160,.3)}
+
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--sub)}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid rgba(255,77,109,.2);border-top-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">🛡️</div>
+    <div class="login-title">Zha<span>nym</span> Admin</div>
+    <div class="login-sub">Панель администратора</div>
+    <input class="login-input" type="password" id="adminPass" placeholder="Введи пароль" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Войти →</button>
+    <div class="login-error" id="loginErr">Неверный пароль!</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar-logo">🛡️ Zha<span>nym</span> Admin</div>
+    <div class="topbar-right">
+      <span id="topbarStats" style="font-size:13px;color:var(--sub)"></span>
+      <button class="logout-btn" onclick="doLogout()">Выйти</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('stats')">📊 Статистика</button>
+    <button class="tab" onclick="showTab('users')">👥 Пользователи</button>
+    <button class="tab" onclick="showTab('subs')">💎 Подписки</button>
+  </div>
+  <div class="content" id="mainContent">
+    <div class="loading"><div class="spinner"></div><br>Загрузка...</div>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <div class="modal-header" id="modalHeader"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<script>
+let statsData = null;
+let usersData = [];
+let currentTab = 'stats';
+let filterGender = '';
+let filterSearch = '';
+let selectedUserId = null;
+
+async function doLogin(){
+  const pass = document.getElementById('adminPass').value;
+  try{
+    const res = await fetch('/admin/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
+    if(res.ok){
+      document.getElementById('loginPage').style.display='none';
+      document.getElementById('app').style.display='flex';
+      document.getElementById('app').style.flexDirection='column';
+      loadAll();
+    } else {
+      document.getElementById('loginErr').style.display='block';
+    }
+  }catch(e){document.getElementById('loginErr').style.display='block';}
+}
+
+async function doLogout(){
+  await fetch('/admin/api/logout');
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('app').style.display='none';
+}
+
+async function loadAll(){
+  try{
+    const [sRes, uRes] = await Promise.all([
+      fetch('/admin/api/stats'),
+      fetch('/admin/api/users')
+    ]);
+    statsData = await sRes.json();
+    usersData = await uRes.json();
+    document.getElementById('topbarStats').textContent = `👥 ${statsData.total} пользователей`;
+    renderTab(currentTab);
+  }catch(e){
+    document.getElementById('mainContent').innerHTML='<div class="loading">Ошибка загрузки. Проверь сервер.</div>';
+  }
+}
+
+function showTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', ['stats','users','subs'][i]===tab);
+  });
+  renderTab(tab);
+}
+
+function renderTab(tab){
+  if(tab==='stats') renderStats();
+  else if(tab==='users') renderUsers();
+  else if(tab==='subs') renderSubs();
+}
+
+function renderStats(){
+  if(!statsData){document.getElementById('mainContent').innerHTML='<div class="loading"><div class="spinner"></div></div>';return;}
+  const s = statsData;
+  const total = s.males+s.females || 1;
+  const mPct = Math.round(s.males/total*100);
+  const fPct = Math.round(s.females/total*100);
+  const subTotal = (s.subscriptions.silver.male+s.subscriptions.silver.female+
+                    s.subscriptions.gold.male+s.subscriptions.gold.female+
+                    s.subscriptions.almaz.male+s.subscriptions.almaz.female);
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card pink">
+        <div class="stat-icon">👥</div>
+        <div class="stat-num">${s.total}</div>
+        <div class="stat-label">Всего</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">👨</div>
+        <div class="stat-num">${s.males}</div>
+        <div class="stat-label">Парней</div>
+      </div>
+      <div class="stat-card pink">
+        <div class="stat-icon">👩</div>
+        <div class="stat-num">${s.females}</div>
+        <div class="stat-label">Девушек</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">💎</div>
+        <div class="stat-num">${subTotal}</div>
+        <div class="stat-label">Подписок</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">💛</div>
+        <div class="stat-num">${s.total_likes}</div>
+        <div class="stat-label">Лайков</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🚫</div>
+        <div class="stat-num" style="color:var(--red)">${s.blocked}</div>
+        <div class="stat-label">Заблок.</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">👫 Соотношение полов</div>
+        <div class="pie-row">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            ${makePie(mPct, fPct)}
+          </svg>
+          <div class="pie-legend">
+            <div class="pie-legend-item"><div class="pie-dot" style="background:var(--blue)"></div>Парни: ${s.males} (${mPct}%)</div>
+            <div class="pie-legend-item"><div class="pie-dot" style="background:var(--pink)"></div>Девушки: ${s.females} (${fPct}%)</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">📈 Регистрации по полу</div>
+        <div class="bar-wrap">
+          <div class="bar-item">
+            <div class="bar-label">👨 Парни</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${mPct}%;background:linear-gradient(90deg,var(--blue),#4361ee)">${mPct}%</div></div>
+            <div class="bar-count">${s.males}</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">👩 Девушки</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${fPct}%;background:linear-gradient(90deg,var(--pink),var(--pink2))">${fPct}%</div></div>
+            <div class="bar-count">${s.females}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function makePie(mPct, fPct){
+  if(mPct===0 && fPct===0) return `<circle cx="60" cy="60" r="50" fill="rgba(255,255,255,.1)"/>`;
+  const r=50, cx=60, cy=60;
+  function sector(pct, startAngle, color){
+    if(pct<=0) return '';
+    if(pct>=100) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}"/>`;
+    const angle = pct/100*360;
+    const end = startAngle+angle;
+    const large = angle>180?1:0;
+    const x1=cx+r*Math.sin(startAngle*Math.PI/180);
+    const y1=cy-r*Math.cos(startAngle*Math.PI/180);
+    const x2=cx+r*Math.sin(end*Math.PI/180);
+    const y2=cy-r*Math.cos(end*Math.PI/180);
+    return `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z" fill="${color}"/>`;
+  }
+  return sector(mPct,0,'#4cc9f0')+sector(fPct,mPct/100*360,'#ff4d6d');
+}
+
+function renderUsers(){
+  if(!usersData.length){document.getElementById('mainContent').innerHTML='<div class="loading">Нет пользователей</div>';return;}
+  const filtered = usersData.filter(u=>{
+    if(filterGender && u.gender!==filterGender) return false;
+    if(filterSearch){
+      const q=filterSearch.toLowerCase();
+      return u.name?.toLowerCase().includes(q)||u.username?.toLowerCase().includes(q)||u.email?.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="search-row">
+      <input class="search-input" placeholder="🔍 Поиск по имени, username, email..." 
+        value="${filterSearch}" oninput="filterSearch=this.value;renderUsers()">
+      <button class="filter-btn ${filterGender===''?'active':''}" onclick="filterGender='';renderUsers()">Все</button>
+      <button class="filter-btn ${filterGender==='male'?'active':''}" onclick="filterGender='male';renderUsers()">👨 Парни</button>
+      <button class="filter-btn ${filterGender==='female'?'active':''}" onclick="filterGender='female';renderUsers()">👩 Девушки</button>
+    </div>
+    <div style="color:var(--sub);font-size:13px;margin-bottom:14px">Найдено: ${filtered.length}</div>
+    <div class="users-list">
+      ${filtered.map(u=>userRowHTML(u)).join('')}
+    </div>
+  `;
+}
+
+function userRowHTML(u){
+  const photo = u.photo && u.photo!=='default.jpg'
+    ? `<div class="user-avatar"><img src="/static/uploads/${u.photo}" onerror="this.parentElement.textContent='${u.gender==='female'?'👩':'👨'}'"></div>`
+    : `<div class="user-avatar">${u.gender==='female'?'👩':'👨'}</div>`;
+  const subBadge = u.subscription ? `<span class="badge-sub badge-${u.subscription}">${u.subscription.toUpperCase()}</span>` : '';
+  const blockedBadge = u.is_blocked ? `<span class="badge-sub badge-blocked">БЛОК</span>` : '';
+  return `
+    <div class="user-row ${u.is_blocked?'blocked':''}" onclick="openUser(${u.id})">
+      ${photo}
+      <div class="user-info">
+        <div class="user-name">${u.name}, ${u.age} ${subBadge} ${blockedBadge}</div>
+        <div class="user-meta">@${u.username} · ${u.email} · ${u.city||'?'}</div>
+      </div>
+      <div class="user-gender">${u.gender==='female'?'👩':'👨'}</div>
+      <div class="user-actions" onclick="event.stopPropagation()">
+        <button class="btn-detail" onclick="openUser(${u.id})">Детали</button>
+        <button class="btn-block ${u.is_blocked?'unblock':'block'}" onclick="toggleBlock(${u.id},event)">
+          ${u.is_blocked?'✅ Разблок':'🚫 Блок'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSubs(){
+  if(!statsData){return;}
+  const s = statsData.subscriptions;
+  const plans = [
+    {key:'silver',name:'🥈 Silver',color:'#c0c0d0',bg:'rgba(180,180,200,.15)'},
+    {key:'gold',name:'🥇 Gold',color:'var(--gold)',bg:'rgba(255,214,10,.1)'},
+    {key:'almaz',name:'💎 Almaz',color:'var(--blue)',bg:'rgba(76,201,240,.1)'},
+  ];
+
+  const subUsers = usersData.filter(u=>u.subscription);
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="charts-grid" style="grid-template-columns:repeat(3,1fr)">
+      ${plans.map(p=>{
+        const total = s[p.key].male + s[p.key].female;
+        const mPct = total>0?Math.round(s[p.key].male/total*100):0;
+        const fPct = total>0?Math.round(s[p.key].female/total*100):0;
+        return `
+          <div class="chart-card" style="border-color:${p.color}30">
+            <div class="chart-title" style="color:${p.color}">${p.name}</div>
+            <div style="font-size:32px;font-weight:900;color:${p.color};margin:8px 0">${total}</div>
+            <div class="bar-wrap">
+              <div class="bar-item">
+                <div class="bar-label" style="font-size:11px">👨 Парни</div>
+                <div class="bar-track"><div class="bar-fill" style="width:${mPct||2}%;background:var(--blue)">${s[p.key].male}</div></div>
+              </div>
+              <div class="bar-item">
+                <div class="bar-label" style="font-size:11px">👩 Девушки</div>
+                <div class="bar-track"><div class="bar-fill" style="width:${fPct||2}%;background:var(--pink)">${s[p.key].female}</div></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div class="chart-card" style="margin-top:0">
+      <div class="chart-title">💎 Пользователи с подпиской (${subUsers.length})</div>
+      <div class="users-list" style="margin-top:14px">
+        ${subUsers.length ? subUsers.map(u=>userRowHTML(u)).join('') : '<div class="empty-list">Нет подписчиков</div>'}
+      </div>
+    </div>
+  `;
+}
+
+async function openUser(id){
+  selectedUserId = id;
+  document.getElementById('userModal').classList.add('show');
+  document.getElementById('modalHeader').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  document.getElementById('modalBody').innerHTML = '';
+  document.getElementById('modalFooter').innerHTML = '';
+
+  try{
+    const res = await fetch(`/admin/api/user/${id}`);
+    const u = await res.json();
+    const photo = u.photo && u.photo!=='default.jpg'
+      ? `<div class="modal-photo"><img src="/static/uploads/${u.photo}" onerror="this.parentElement.textContent='${u.gender==='female'?'👩':'👨'}'"></div>`
+      : `<div class="modal-photo">${u.gender==='female'?'👩':'👨'}</div>`;
+    const subBadge = u.subscription ? `<span class="badge-sub badge-${u.subscription}" style="margin-left:6px">${u.subscription.toUpperCase()}</span>` : '';
+    const blockedBadge = u.is_blocked ? `<span class="badge-sub badge-blocked" style="margin-left:6px">ЗАБЛОКИРОВАН</span>` : '';
+
+    document.getElementById('modalHeader').innerHTML = `
+      ${photo}
+      <div>
+        <div class="modal-name">${u.name}, ${u.age} ${subBadge} ${blockedBadge}</div>
+        <div class="modal-sub">@${u.username} · ${u.email}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    `;
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="section">
+        <div class="section-title">📋 Анкета</div>
+        <div class="info-grid">
+        <div class="info-item"><div class="info-key">Телефон</div><div class="info-val">${u.phone||'—'}</div></div>
+        <div class="info-item"><div class="info-key">Email</div><div class="info-val">${u.email||'—'}</div></div>
+        <div class="info-item"><div class="info-key">Username</div><div class="info-val">@${u.username}</div></div>
+          <div class="info-item"><div class="info-key">Пол</div><div class="info-val">${u.gender==='female'?'👩 Девушка':'👨 Парень'}</div></div>
+          <div class="info-item"><div class="info-key">Город</div><div class="info-val">${u.city||'—'}</div></div>
+          <div class="info-item"><div class="info-key">Цель</div><div class="info-val">${u.goal||'—'}</div></div>
+          <div class="info-item"><div class="info-key">Знак</div><div class="info-val">${u.zodiac||'—'}</div></div>
+          <div class="info-item"><div class="info-key">Спорт</div><div class="info-val">${u.sport||'—'}</div></div>
+          <div class="info-item"><div class="info-key">Telegram ID</div><div class="info-val">${u.telegram_id||'—'}</div></div>
+          <div class="info-item"><div class="info-key">📱 Телефон</div><div class="info-val">${u.phone||'—'}</div></div>
+<div class="info-item"><div class="info-key">📧 Email</div><div class="info-val">${u.email||'—'}</div></div>
+<div class="info-item"><div class="info-key">🔑 Username</div><div class="info-val">@${u.username}</div></div>
+        </div>
+        ${u.bio?`<div class="info-item" style="margin-top:8px"><div class="info-key">О себе</div><div class="info-val" style="font-size:13px">${u.bio}</div></div>`:''}
+      </div>
+
+      <div class="section">
+        <div class="section-title">💛 Лайки поставил (${u.likes_given.length})</div>
+        <div class="likes-list">
+          ${u.likes_given.length ? u.likes_given.map(l=>`<span class="like-chip">💛 ${l.name}</span>`).join('') : '<div class="empty-list">Нет</div>'}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">❤️ Лайки получил (${u.likes_received.length})</div>
+        <div class="likes-list">
+          ${u.likes_received.length ? u.likes_received.map(l=>`<span class="like-chip" style="background:rgba(6,214,160,.1);border-color:rgba(6,214,160,.3);color:var(--green)">❤️ ${l.name}</span>`).join('') : '<div class="empty-list">Нет</div>'}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">💬 Последние сообщения (${u.messages.length})</div>
+        <div class="messages-list">
+          ${u.messages.length ? u.messages.map(m=>`
+            <div class="msg ${m.is_me?'me':'other'}">
+              <div class="msg-who">${m.is_me?'Я → '+m.receiver:'От '+m.sender}</div>
+              ${m.content}
+            </div>
+          `).join('') : '<div class="empty-list">Нет сообщений</div>'}
+        </div>
+      </div>
+    `;
+
+    document.getElementById('modalFooter').innerHTML = `
+      <button class="modal-btn ${u.is_blocked?'modal-btn-unblock':'modal-btn-block'}" 
+        onclick="toggleBlockModal(${u.id}, ${u.is_blocked})">
+        ${u.is_blocked?'✅ Разблокировать':'🚫 Заблокировать'}
+      </button>
+    `;
+  }catch(e){
+    document.getElementById('modalBody').innerHTML='<div class="empty-list">Ошибка загрузки</div>';
+  }
+}
+
+function closeModal(){
+  document.getElementById('userModal').classList.remove('show');
+}
+
+async function toggleBlock(id, e){
+  e.stopPropagation();
+  try{
+    const res = await fetch(`/admin/api/user/${id}/block`,{method:'POST'});
+    const data = await res.json();
+    const u = usersData.find(x=>x.id===id);
+    if(u) u.is_blocked = data.blocked;
+    renderTab(currentTab);
+  }catch(e){alert('Ошибка');}
+}
+
+async function toggleBlockModal(id, isBlocked){
+  try{
+    const res = await fetch(`/admin/api/user/${id}/block`,{method:'POST'});
+    const data = await res.json();
+    const u = usersData.find(x=>x.id===id);
+    if(u) u.is_blocked = data.blocked;
+    closeModal();
+    renderTab(currentTab);
+  }catch(e){alert('Ошибка');}
+}
+
+document.getElementById('userModal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+
+// Проверяем сессию при загрузке
+fetch('/admin/api/stats').then(r=>{
+  if(r.ok){
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('app').style.flexDirection='column';
+    loadAll();
+  }
+}).catch(()=>{});
+</script>
+</body>
+</html>

@@ -2,55 +2,104 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Вход — Zhanym</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Zhanym — Вход</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff4d6d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zhanym">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:url('/static/hero.jpg') center center/cover no-repeat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.box{background:#fff;border-radius:30px;padding:40px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-h1{text-align:center;color:#ff6b6b;margin-bottom:5px;font-size:28px}
-.sub{text-align:center;color:#aaa;margin-bottom:25px;font-size:14px}
-.group{margin-bottom:15px}
-label{display:block;font-size:13px;color:#666;margin-bottom:5px;font-weight:bold}
-input{width:100%;padding:12px 15px;border:2px solid #eee;border-radius:12px;font-size:15px;outline:none}
-input:focus{border-color:#ff6b6b}
-.btn{width:100%;padding:15px;background:url('/static/hero.jpg') center center/cover no-repeat;color:#fff;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
-.register{text-align:center;margin-top:15px;color:#aaa;font-size:14px}
-.register a{color:#ff6b6b;text-decoration:none;font-weight:bold}
-.error{background:#ffe0e0;color:#ff4444;padding:10px 15px;border-radius:10px;margin-bottom:15px;font-size:14px;display:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:#0d0d1a;color:white;overflow:hidden}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 20%,rgba(255,77,109,.2) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,133,161,.15) 0%,transparent 50%),#0d0d1a}
+.bg-circles{position:fixed;inset:0;z-index:0;overflow:hidden}
+.circle{position:absolute;border-radius:50%;background:linear-gradient(135deg,rgba(255,77,109,.15),rgba(255,133,161,.1));animation:float 8s ease-in-out infinite}
+.circle:nth-child(1){width:300px;height:300px;top:-100px;right:-80px;animation-delay:0s}
+.circle:nth-child(2){width:200px;height:200px;bottom:100px;left:-60px;animation-delay:3s}
+.circle:nth-child(3){width:150px;height:150px;bottom:300px;right:20px;animation-delay:5s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px 40px}
+.logo-wrap{text-align:center;margin-bottom:36px}
+.logo-icon{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px;box-shadow:0 15px 40px rgba(255,77,109,.4)}
+.logo-title{font-size:32px;font-weight:900;letter-spacing:-1px}
+.logo-title span{color:#ff4d6d}
+.logo-sub{color:rgba(255,255,255,.45);font-size:14px;margin-top:6px;font-weight:600}
+.card{width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:28px 24px;backdrop-filter:blur(20px)}
+.error{background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.3);color:#ff85a1;padding:12px 16px;border-radius:14px;font-size:14px;font-weight:600;margin-bottom:20px;display:none;text-align:center}
+.group{margin-bottom:16px}
+.group label{display:block;font-size:12px;font-weight:800;color:rgba(255,255,255,.4);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.input-wrap{position:relative}
+.input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
+.group input{width:100%;padding:16px 16px 16px 48px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;color:white;font-size:16px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;transition:.2s;-webkit-appearance:none}
+.group input::placeholder{color:rgba(255,255,255,.25)}
+.group input:focus{border-color:#ff4d6d;background:rgba(255,77,109,.08);box-shadow:0 0 0 4px rgba(255,77,109,.1)}
+.btn-login{width:100%;padding:18px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);border:none;border-radius:50px;color:white;font-size:17px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:8px;box-shadow:0 10px 30px rgba(255,77,109,.4);transition:.2s;letter-spacing:.5px}
+.btn-login:active{transform:scale(.97)}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:rgba(255,255,255,.2);font-size:13px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+.links{text-align:center}
+.links a{color:rgba(255,255,255,.4);font-size:14px;font-weight:600;text-decoration:none;display:block;padding:6px;transition:.2s}
+.links a.register{color:#ff4d6d;font-size:15px;font-weight:800;margin-bottom:4px}
 </style>
 </head>
 <body>
-<div class="box">
-<div style="text-align:center;font-size:40px;margin-bottom:10px">💕</div>
-<h1>Добро пожаловать</h1>
-<p class="sub">Войди в свой аккаунт</p>
-<div class="error" id="error"></div>
-<div class="group"><label>Логин</label><input type="text" id="username" placeholder="username"></div>
-<div class="group"><label>Пароль</label><input type="password" id="password" placeholder="********"></div>
-<button class="btn" onclick="login()">Войти</button>
-<p class="register">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+<div class="bg"></div>
+<div class="bg-circles">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+<div class="page">
+  <div class="logo-wrap">
+    <div class="logo-icon">🌹</div>
+    <div class="logo-title">Zha<span>nym</span></div>
+    <div class="logo-sub">Найди свою половинку</div>
+  </div>
+  <div class="card">
+    <div class="error" id="error"></div>
+    <div class="group">
+      <label>Логин</label>
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
+        <input type="text" id="username" placeholder="Введи username" autocomplete="username">
+      </div>
+    </div>
+    <div class="group">
+      <label>Пароль</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="password" placeholder="Введи пароль" autocomplete="current-password">
+      </div>
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="login()">Войти →</button>
+    <div class="divider">или</div>
+    <div class="links">
+      <a href="/register" class="register">Нет аккаунта? Зарегистрироваться</a>
+      <a href="/forgot-password">Забыл пароль?</a>
+    </div>
+  </div>
 </div>
 <script>
-async function login() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  if(!username||!password){ showError('Заполни все поля'); return; }
-  try {
-    const form = new FormData();
-    form.append('username', username);
-    form.append('password', password);
-    const res = await fetch('/token', {method:'POST', body: new URLSearchParams({username, password})});
-    const data = await res.json();
-    if(res.ok){
-      localStorage.setItem('token', data.access_token);
-      window.location.href = '/dashboard';
-    } else {
-      showError(data.detail || 'Неверный логин или пароль');
-    }
-  } catch(e){ showError('Ошибка сервера'); }
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js');
 }
-function showError(msg){ const el=document.getElementById('error'); el.textContent=msg; el.style.display='block'; }
+async function login(){
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  if(!username||!password){showError('Заполни все поля');return;}
+  btn.textContent='Входим...';btn.style.opacity='.7';btn.style.pointerEvents='none';
+  try{
+    const res = await fetch('/token',{method:'POST',body:new URLSearchParams({username,password})});
+    const data = await res.json();
+    if(res.ok){localStorage.setItem('token',data.access_token);window.location.href='/dashboard';}
+    else{showError(data.detail||'Неверный логин или пароль');btn.textContent='Войти →';btn.style.opacity='1';btn.style.pointerEvents='auto';}
+  }catch(e){showError('Ошибка сервера');btn.textContent='Войти →';btn.style.opacity='1';btn.style.pointerEvents='auto';}
+}
+function showError(msg){const el=document.getElementById('error');el.textContent='⚠️ '+msg;el.style.display='block';}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 </script>
 </body>
 </html>

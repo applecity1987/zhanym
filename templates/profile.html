@@ -2,227 +2,379 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Профиль — Zhanym</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;padding-bottom:80px}
-.header{background:rgba(0,0,0,.6);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:100}
-.logo{font-size:22px;font-weight:bold;color:white;text-decoration:none}
-.nav a{margin-left:12px;text-decoration:none;color:rgba(255,255,255,.7);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
-.nav a:hover{background:rgba(255,255,255,.1)}
-.container{max-width:900px;margin:0 auto;padding:75px 20px 20px}
+:root{--pink:#ff4d6d;--pink2:#ff85a1;--dark:#0d0d1a;--card:#16162a}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min-height:100%;padding-bottom:90px}
+
+/* HEADER */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(13,13,26,.9);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  backdrop-filter:blur(20px);
+}
+.logo{font-size:22px;font-weight:900;color:white;letter-spacing:-1px;text-decoration:none}
+.logo span{color:var(--pink)}
+.header-btn{
+  padding:8px 16px;border-radius:50px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.7);font-size:13px;font-weight:700;
+  font-family:'Nunito',sans-serif;cursor:pointer;
+}
 
 /* HERO */
-.hero{border-radius:24px;overflow:hidden;position:relative;margin-bottom:20px;background:linear-gradient(135deg,#1a1a2e,#2d1b3d)}
-.hero-photo{width:100%;height:600px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:100px;position:relative}
-.hero-photo img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
-.hero-emoji{position:relative;z-index:1}
-.hero-gradient{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(0,0,0,.9),transparent)}
-.hero-info{position:absolute;bottom:20px;left:20px;right:20px;z-index:2}
-.hero-name{font-size:28px;font-weight:900;color:white}
-.hero-city{color:rgba(255,255,255,.7);font-size:14px;margin-top:4px}
-.edit-photo-btn{position:absolute;top:15px;right:15px;background:rgba(0,0,0,.6);color:white;border:none;border-radius:20px;padding:8px 15px;font-size:13px;cursor:pointer;backdrop-filter:blur(5px);z-index:3}
-.edit-profile-btn{position:absolute;top:15px;left:15px;background:rgba(0,0,0,.6);color:white;border:none;border-radius:20px;padding:8px 15px;font-size:13px;cursor:pointer;backdrop-filter:blur(5px);z-index:3}
+.hero{
+  margin-top:56px;
+  position:relative;
+  height:420px;overflow:hidden;
+}
+.hero-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:flex;align-items:center;justify-content:center;
+  font-size:100px;
+  background:linear-gradient(135deg,#1a0a2e,#2d1040);
+  position:relative;
+}
+.hero-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.hero-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 40%,rgba(13,13,26,1) 100%);
+}
+.hero-info{
+  position:absolute;bottom:20px;left:20px;right:20px;
+}
+.hero-name{font-size:28px;font-weight:900;letter-spacing:-.5px}
+.hero-city{color:rgba(255,255,255,.6);font-size:13px;margin-top:4px;font-weight:600}
+
+/* HERO BUTTONS */
+.hero-actions{
+  position:absolute;top:14px;left:0;right:0;
+  display:flex;justify-content:space-between;padding:0 14px;
+  z-index:5;
+}
+.hero-action-btn{
+  padding:8px 16px;border-radius:50px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.15);
+  color:white;font-size:13px;font-weight:700;
+  font-family:'Nunito',sans-serif;cursor:pointer;
+  backdrop-filter:blur(10px);
+}
+
+/* CONTAINER */
+.container{padding:0 16px}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-.stat{background:rgba(255,255,255,.05);border-radius:16px;padding:15px;text-align:center;border:1px solid rgba(255,255,255,.1)}
-.stat h3{font-size:24px;font-weight:900;color:#ff4458}
-.stat p{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
+.stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:10px;margin:16px 0;
+}
+.stat{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;padding:14px 10px;text-align:center;
+}
+.stat-num{font-size:26px;font-weight:900;color:var(--pink)}
+.stat-label{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 
-/* ФОТО СЕТКА */
-.section{background:rgba(255,255,255,.05);border-radius:20px;padding:20px;margin-bottom:15px;border:1px solid rgba(255,255,255,.1)}
-.section-title{font-size:16px;font-weight:bold;color:white;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+/* SECTION */
+.section{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;padding:18px;margin-bottom:14px;
+}
+.section-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.section-title{font-size:15px;font-weight:800;color:white}
+.section-action{
+  font-size:12px;font-weight:700;color:var(--pink);
+  background:rgba(255,77,109,.1);
+  padding:5px 12px;border-radius:50px;
+  border:1px solid rgba(255,77,109,.2);
+  cursor:pointer;text-decoration:none;
+}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  padding:7px 14px;border-radius:50px;
+  background:rgba(255,77,109,.1);
+  color:var(--pink2);
+  font-size:12px;font-weight:700;
+  border:1px solid rgba(255,77,109,.2);
+}
+
+/* PHOTO GRID */
 .photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.photo-slot{aspect-ratio:3/4;border:2px dashed rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;background:rgba(255,255,255,.03);transition:.2s}
-.photo-slot:hover{border-color:#ff4458}
-.photo-slot .plus{width:32px;height:32px;background:linear-gradient(135deg,#ff4458,#fd79a8);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;position:absolute;bottom:6px;right:6px}
+.photo-slot{
+  aspect-ratio:3/4;border-radius:14px;
+  border:2px dashed rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;overflow:hidden;
+  background:rgba(255,255,255,.03);transition:.2s;
+}
+.photo-slot:active{opacity:.8}
+.photo-slot .plus-btn{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:white;font-size:20px;font-weight:bold;
+  position:absolute;bottom:8px;right:8px;
+  box-shadow:0 4px 12px rgba(255,77,109,.4);
+}
 .photo-slot img{width:100%;height:100%;object-fit:cover}
-.del-btn{position:absolute;top:5px;right:5px;background:rgba(255,0,0,.8);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.del-btn{
+  position:absolute;top:6px;right:6px;
+  background:rgba(0,0,0,.7);color:white;
+  border:none;border-radius:50%;
+  width:26px;height:26px;font-size:14px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(5px);
+}
+
+/* SUBSCRIPTION CARDS */
+.sub-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.sub-card{
+  border-radius:18px;padding:16px 10px;
+  text-align:center;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;transition:.2s;
+  display:flex;flex-direction:column;
+}
+.sub-card:active{transform:scale(.97)}
+.sub-card.gold{border-color:rgba(245,166,35,.4)}
+.sub-card.almaz{border-color:rgba(0,200,255,.3)}
+.sub-icon{font-size:24px;margin-bottom:6px}
+.sub-name{font-size:11px;font-weight:800;color:white;margin-bottom:4px}
+.sub-price{font-size:13px;font-weight:900;color:var(--pink);margin-bottom:10px}
+.sub-price span{font-size:9px;color:rgba(255,255,255,.4);font-weight:600}
+.sub-features{font-size:10px;color:rgba(255,255,255,.5);text-align:left;line-height:2;flex:1;margin-bottom:10px}
+.sub-btn{
+  padding:8px 4px;border:none;border-radius:50px;
+  font-size:10px;font-weight:800;cursor:pointer;
+  font-family:'Nunito',sans-serif;width:100%;
+}
+.sub-badge{
+  font-size:9px;font-weight:800;
+  padding:3px 8px;border-radius:50px;
+  margin-bottom:6px;display:inline-block;
+}
 
 /* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,26,.95);display:flex;justify-content:center;gap:30px;padding:10px 0 20px;border-top:1px solid rgba(255,255,255,.1);z-index:40}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:rgba(255,255,255,.5);font-size:11px}
-.bottom-nav a.active,.bottom-nav a:hover{color:#ff6b6b}
-.bottom-nav a span{font-size:22px}
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:80px;
+  background:rgba(13,13,26,.95);
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:space-around;
+  padding:0 10px;backdrop-filter:blur(20px);z-index:100;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  text-decoration:none;color:rgba(255,255,255,.35);
+  font-size:10px;font-weight:700;
+  padding:6px 12px;border-radius:16px;transition:.2s;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.nav-item.active{color:var(--pink)}
+.nav-item.active .nav-icon{background:rgba(255,77,109,.15);border-color:rgba(255,77,109,.3)}
+.nav-icon{
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;border:1px solid transparent;transition:.2s;
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <a href="/" class="logo">🌹 Zhanym</a>
-  <div class="nav">
-    <a href="/dashboard">🔥 Лента</a>
-    <a href="/chat">💬 Чат</a>
+  <a href="/" class="logo">Zha<span>nym</span></a>
+  <button class="header-btn" onclick="logout()">Выйти</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-img" id="heroPhoto">
+    <span id="heroEmoji">👤</span>
+  </div>
+  <div class="hero-gradient"></div>
+  <div class="hero-actions">
+    <button class="hero-action-btn" onclick="window.location.href='/edit_profile'">✏️ Редактировать</button>
+    <button class="hero-action-btn" onclick="document.getElementById('mainPhotoInput').click()">📷 Фото</button>
+  </div>
+  <div class="hero-info">
+    <div class="hero-name" id="profileName">Загрузка...</div>
+    <div class="hero-city" id="profileCity">📍</div>
   </div>
 </div>
+<input type="file" id="mainPhotoInput" accept="image/*" style="display:none" onchange="uploadMainPhoto(this)">
 
 <div class="container">
 
-  <!-- HERO ФОТО -->
-  <div class="hero">
-    <div class="hero-photo" id="heroPhoto">
-      <span class="hero-emoji" id="heroEmoji">👤</span>
-    </div>
-    <div class="hero-gradient"></div>
-    <div class="hero-info">
-      <div class="hero-name" id="profileName">Загрузка...</div>
-      <div class="hero-city" id="profileCity">📍</div>
-    </div>
-    <button class="edit-photo-btn" onclick="document.getElementById('mainPhotoInput').click()">📷 Изменить фото</button>
-    <button class="edit-profile-btn" onclick="window.location.href='/edit_profile'">✏️ Редактировать</button>
-  </div>
-  <input type="file" id="mainPhotoInput" accept="image/*" style="display:none" onchange="uploadMainPhoto(this)">
-
-  <!-- СТАТИСТИКА -->
+  <!-- STATS -->
   <div class="stats">
-    <div class="stat"><h3 id="likesCount">0</h3><p>Лайков</p></div>
-    <div class="stat"><h3 id="matchesCount">0</h3><p>Пар</p></div>
-    <div class="stat"><h3 id="daysCount">1</h3><p>Дней</p></div>
+    <div class="stat">
+      <div class="stat-num" id="likesCount">0</div>
+      <div class="stat-label">Лайков</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="matchesCount">0</div>
+      <div class="stat-label">Пар</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="daysCount">1</div>
+      <div class="stat-label">Дней</div>
+    </div>
   </div>
 
   <!-- АНКЕТА -->
   <div class="section" id="anketa" style="display:none">
-    <div class="section-title">📋 Моя анкета</div>
-    <div id="anketa-content" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+    <div class="section-header">
+      <div class="section-title">📋 Моя анкета</div>
+      <a href="/edit_profile" class="section-action">Изменить</a>
+    </div>
+    <div class="tags" id="anketa-content"></div>
   </div>
 
-   <!-- СЕТКА ФОТО -->
+  <!-- ФОТО -->
   <div class="section">
-    <div class="section-title">📸 Мои фото <span style="color:rgba(255,255,255,.4);font-size:13px;font-weight:normal" id="photoCountText">0/6</span></div>
+    <div class="section-header">
+      <div class="section-title">📸 Мои фото</div>
+      <div class="section-action" id="photoCountText">0/6</div>
+    </div>
     <div class="photo-grid" id="photoGrid">
-      <div class="photo-slot" onclick="triggerSlot(0)" id="slot0"><div class="plus">+</div></div>
-      <div class="photo-slot" onclick="triggerSlot(1)" id="slot1"><div class="plus">+</div></div>
-      <div class="photo-slot" onclick="triggerSlot(2)" id="slot2"><div class="plus">+</div></div>
-      <div class="photo-slot" onclick="triggerSlot(3)" id="slot3"><div class="plus">+</div></div>
-      <div class="photo-slot" onclick="triggerSlot(4)" id="slot4"><div class="plus">+</div></div>
-      <div class="photo-slot" onclick="triggerSlot(5)" id="slot5"><div class="plus">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(0)" id="slot0"><div class="plus-btn">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(1)" id="slot1"><div class="plus-btn">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(2)" id="slot2"><div class="plus-btn">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(3)" id="slot3"><div class="plus-btn">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(4)" id="slot4"><div class="plus-btn">+</div></div>
+      <div class="photo-slot" onclick="triggerSlot(5)" id="slot5"><div class="plus-btn">+</div></div>
     </div>
     <input type="file" id="slotPhotoInput" accept="image/*" style="display:none" onchange="uploadSlotPhoto(this)">
   </div>
 
   <!-- ПОДПИСКИ -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
-
-    <!-- Silver -->
-    <div style="background:#1a1a2e;border-radius:20px;padding:30px 15px;text-align:center;border:1px solid rgba(255,255,255,.1)">
-      <div style="font-size:32px;margin-bottom:10px">⭐</div>
-      <div style="font-size:14px;font-weight:bold;color:white;margin-bottom:5px">Zhanym Silver</div>
-      <div style="font-size:18px;font-weight:900;color:#ff4458;margin-bottom:15px">2000 ₸<span style="font-size:11px;color:rgba(255,255,255,.5)">/7 дней</span></div>
-      <div style="font-size:11px;color:rgba(255,255,255,.6);text-align:left;margin-bottom:25px;line-height:2.4">
-        ✅ Безлимит лайков<br>✅ Скрыть рекламу<br>✅ Инкогнито<br>✅ Отмена свайпа<br>✅ Поиск по КЗ<br>&nbsp;
-      </div>
-      <button style="width:100%;padding:12px;background:#888888;color:white;border:none;border-radius:20px;font-size:12px;font-weight:bold;cursor:pointer">Начать с Silver</button>
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">👑 Premium</div>
+      <a href="/subscription" class="section-action">Все планы</a>
     </div>
-
-    <!-- Gold -->
-    <div style="background:#1a1a2e;border-radius:20px;padding:30px 15px;text-align:center;border:2px solid #f5a623;position:relative">
-      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#f5a623;color:black;font-size:11px;font-weight:bold;padding:4px 12px;border-radius:20px;white-space:nowrap">🔥 Популярный</div>
-      <div style="font-size:32px;margin-bottom:10px">🥇</div>
-      <div style="font-size:14px;font-weight:bold;color:white;margin-bottom:5px">Zhanym Gold</div>
-      <div style="font-size:18px;font-weight:900;color:#ff4458;margin-bottom:15px">5000 ₸<span style="font-size:11px;color:rgba(255,255,255,.5)">/месяц</span></div>
-      <div style="font-size:11px;color:rgba(255,255,255,.6);text-align:left;margin-bottom:25px;line-height:2.4">
-        ✅ Всё из Silver<br>✅ Кто лайкнул<br>✅ Топ профили<br>✅ 5 суперлайков<br>✅ 1 буст<br>✅ Приоритет
+    <div class="sub-cards">
+      <div class="sub-card silver" onclick="window.location.href='/subscription'">
+        <div class="sub-icon">⭐</div>
+        <div class="sub-name">Silver</div>
+        <div class="sub-price">2000₸<span>/нед</span></div>
+        <div class="sub-features">✅ Безлимит лайков<br>✅ Инкогнито<br>✅ Отмена свайпа<br>&nbsp;</div>
+        <button class="sub-btn" style="background:#888;color:white">Silver</button>
       </div>
-      <button style="width:100%;padding:12px;background:#f5a623;color:black;border:none;border-radius:20px;font-size:12px;font-weight:bold;cursor:pointer">Начать с Gold</button>
-    </div>
-
-    <!-- Almaz -->
-    <div style="background:#1a1a2e;border-radius:20px;padding:30px 15px;text-align:center;border:2px solid #00c8ff;position:relative">
-      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#00c8ff;color:black;font-size:11px;font-weight:bold;padding:4px 12px;border-radius:20px;white-space:nowrap">💎 Лучший выбор</div>
-      <div style="font-size:32px;margin-bottom:10px">💎</div>
-      <div style="font-size:14px;font-weight:bold;color:white;margin-bottom:5px">Zhanym Almaz</div>
-      <div style="font-size:18px;font-weight:900;color:#ff4458;margin-bottom:15px">7000 ₸<span style="font-size:11px;color:rgba(255,255,255,.5)">/месяц</span></div>
-      <div style="font-size:11px;color:rgba(255,255,255,.6);text-align:left;margin-bottom:25px;line-height:2.4">
-        ✅ Всё из Gold<br>✅ Сообщения до матча<br>✅ Приоритет лайков<br>✅ История лайков<br>✅ Безлимит суперлайков<br>✅ VIP 24/7
+      <div class="sub-card gold" onclick="window.location.href='/subscription'">
+        <div class="sub-badge" style="background:rgba(245,166,35,.2);color:#f5a623">🔥 Хит</div>
+        <div class="sub-icon">🥇</div>
+        <div class="sub-name">Gold</div>
+        <div class="sub-price">5000₸<span>/мес</span></div>
+        <div class="sub-features">✅ Всё из Silver<br>✅ Кто лайкнул<br>✅ 5 суперлайков<br>✅ 1 буст</div>
+        <button class="sub-btn" style="background:#f5a623;color:black">Gold</button>
       </div>
-      <button style="width:100%;padding:12px;background:#00c8ff;color:black;border:none;border-radius:20px;font-size:12px;font-weight:bold;cursor:pointer">Начать с Almaz</button>
+      <div class="sub-card almaz" onclick="window.location.href='/subscription'">
+        <div class="sub-badge" style="background:rgba(0,200,255,.15);color:#00c8ff">💎 VIP</div>
+        <div class="sub-icon">💎</div>
+        <div class="sub-name">Almaz</div>
+        <div class="sub-price">7000₸<span>/мес</span></div>
+        <div class="sub-features">✅ Всё из Gold<br>✅ До матча<br>✅ Безлимит ⭐<br>✅ VIP 24/7</div>
+        <button class="sub-btn" style="background:#00c8ff;color:black">Almaz</button>
+      </div>
     </div>
-
+  </div>
 
 </div>
 
-<div class="bottom-nav">
-  <a href="/dashboard"><span>🔥</span>Свайпить</a>
-  <a href="#"><span>💛</span>Лайки</a>
-  <a href="/chat"><span>💬</span>Чат</a>
-  <a href="/profile" class="active"><span>👤</span>Профиль</a>
-</div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="/dashboard" class="nav-item"><div class="nav-icon">🔥</div>Лента</a>
+  <a href="/likes" class="nav-item"><div class="nav-icon">💛</div>Лайки</a>
+  <a href="/chat" class="nav-item"><div class="nav-icon">💬</div>Чат</a>
+  <a href="/profile" class="nav-item active"><div class="nav-icon">👤</div>Профиль</a>
+</nav>
 
 <script>
 const token = localStorage.getItem('token');
-if(!token) window.location.href = '/login';
+if(!token) window.location.href='/login';
 let activeSlot = 0;
 
-async function loadProfile() {
-  try {
-    const res = await fetch('/users/me', {headers:{'Authorization':'Bearer '+token}});
-    if(res.status===401){ window.location.href='/login'; return; }
+async function loadProfile(){
+  try{
+    const res = await fetch('/users/me',{headers:{'Authorization':'Bearer '+token}});
+    if(res.status===401){window.location.href='/login';return;}
     const user = await res.json();
+
     document.getElementById('profileName').textContent = user.name+', '+user.age;
     document.getElementById('profileCity').textContent = '📍 '+(user.city||'');
-
-    const days = Math.max(1, Math.floor((Date.now()-new Date(user.created_at))/86400000));
+    const days = Math.max(1,Math.floor((Date.now()-new Date(user.created_at))/86400000));
     document.getElementById('daysCount').textContent = days;
 
+    // Фото
     if(user.photo && user.photo!=='default.jpg'){
       const hp = document.getElementById('heroPhoto');
       const img = document.createElement('img');
       img.src = '/static/uploads/'+user.photo;
       hp.appendChild(img);
-      document.getElementById('heroEmoji').style.display = 'none';
+      document.getElementById('heroEmoji').style.display='none';
     } else {
       document.getElementById('heroEmoji').textContent = user.gender==='female'?'👩':'👨';
     }
 
-    // Отображение анкеты
+    // Анкета
     const fields = [
-      {icon:'💘', val: user.goal},
-      {icon:'🍷', val: user.drink},
-      {icon:'🚬', val: user.smoke},
-      {icon:'🏋️', val: user.sport},
-      {icon:'🐾', val: user.pet},
-      {icon:'💬', val: user.communication},
-      {icon:'❤️', val: user.love_language},
-      {icon:'🎓', val: user.education},
-      {icon:'🌙', val: user.zodiac},
+      {icon:'💘',val:user.goal},{icon:'🍷',val:user.drink},{icon:'🚬',val:user.smoke},
+      {icon:'🏋️',val:user.sport},{icon:'🐾',val:user.pet},{icon:'💬',val:user.communication},
+      {icon:'❤️',val:user.love_language},{icon:'🎓',val:user.education},{icon:'🌙',val:user.zodiac},
     ];
     const tags = fields.filter(f=>f.val);
     const interests = user.interests ? user.interests.split(',') : [];
-    interests.forEach(i=> tags.push({icon:'✨', val:i.trim()}));
-
-    if(tags.length > 0){
-      const container = document.getElementById('anketa-content');
-      container.innerHTML = tags.map(t=>
-        `<span style="background:rgba(255,68,88,.15);color:#ff4458;padding:8px 14px;border-radius:50px;font-size:13px;border:1px solid rgba(255,68,88,.3)">${t.icon} ${t.val}</span>`
-      ).join('');
-      document.getElementById('anketa').style.display = 'block';
+    interests.forEach(i=>tags.push({icon:'✨',val:i.trim()}));
+    if(tags.length>0){
+      document.getElementById('anketa-content').innerHTML =
+        tags.map(t=>`<span class="tag">${t.icon} ${t.val}</span>`).join('');
+      document.getElementById('anketa').style.display='block';
     }
 
-  } catch(e){ console.log(e); }
+    // Лайки и пары
+    const [matchRes, likesRes] = await Promise.all([
+      fetch('/search/matches',{headers:{'Authorization':'Bearer '+token}}),
+      fetch('/search/who_liked_me',{headers:{'Authorization':'Bearer '+token}})
+    ]);
+    if(matchRes.ok){const m=await matchRes.json();document.getElementById('matchesCount').textContent=m.length;}
+    if(likesRes.ok){const l=await likesRes.json();document.getElementById('likesCount').textContent=l.length;}
+
+  }catch(e){console.log(e);}
 }
 
 async function uploadMainPhoto(input){
   const file = input.files[0];
   if(!file) return;
   const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch('/users/me/photo', {method:'POST', headers:{'Authorization':'Bearer '+token}, body:formData});
+  formData.append('file',file);
+  const res = await fetch('/users/me/photo',{method:'POST',headers:{'Authorization':'Bearer '+token},body:formData});
   if(res.ok){
     const data = await res.json();
     const hp = document.getElementById('heroPhoto');
     let img = hp.querySelector('img');
-    if(!img){ img = document.createElement('img'); hp.appendChild(img); }
-    img.src = '/static/uploads/'+data.photo+'?t='+Date.now();
-    document.getElementById('heroEmoji').style.display = 'none';
+    if(!img){img=document.createElement('img');hp.appendChild(img);}
+    img.src='/static/uploads/'+data.photo+'?t='+Date.now();
+    document.getElementById('heroEmoji').style.display='none';
   }
 }
 
-function triggerSlot(slot){
-  activeSlot = slot;
-  document.getElementById('slotPhotoInput').click();
-}
+function triggerSlot(slot){activeSlot=slot;document.getElementById('slotPhotoInput').click();}
 
 async function uploadSlotPhoto(input){
   const file = input.files[0];
@@ -230,27 +382,27 @@ async function uploadSlotPhoto(input){
   const reader = new FileReader();
   reader.onload = function(e){
     const slot = document.getElementById('slot'+activeSlot);
-    slot.innerHTML = '<img src="'+e.target.result+'"><button class="del-btn" onclick="removeSlot(event,'+activeSlot+')">×</button>';
+    slot.innerHTML=`<img src="${e.target.result}"><button class="del-btn" onclick="removeSlot(event,${activeSlot})">×</button>`;
     updatePhotoCount();
   };
   reader.readAsDataURL(file);
   input.value='';
 }
 
-function removeSlot(e, slot){
+function removeSlot(e,slot){
   e.stopPropagation();
-  const s = document.getElementById('slot'+slot);
-  s.innerHTML = '<div class="plus">+</div>';
-  s.onclick = function(){ triggerSlot(slot); };
+  const s=document.getElementById('slot'+slot);
+  s.innerHTML='<div class="plus-btn">+</div>';
+  s.onclick=()=>triggerSlot(slot);
   updatePhotoCount();
 }
 
 function updatePhotoCount(){
-  const count = document.querySelectorAll('.photo-slot img').length;
-  document.getElementById('photoCountText').textContent = count+'/6';
+  const count=document.querySelectorAll('.photo-slot img').length;
+  document.getElementById('photoCountText').textContent=count+'/6';
 }
 
-function logout(){ localStorage.removeItem('token'); window.location.href='/'; }
+function logout(){localStorage.removeItem('token');window.location.href='/';}
 loadProfile();
 </script>
 </body>

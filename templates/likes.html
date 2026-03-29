@@ -2,125 +2,179 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Лайки — Zhanym</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;padding-bottom:100px}
-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.header{background:rgba(0,0,0,.6);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:100}
-.logo{font-size:22px;font-weight:bold;color:white;text-decoration:none}
-.nav a{margin-left:12px;text-decoration:none;color:rgba(255,255,255,.7);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
-.nav a:hover{background:rgba(255,255,255,.1)}
-.container{max-width:900px;margin:0 auto;padding:90px 20px 20px;position:relative;z-index:5}
-.page-title{font-size:32px;font-weight:900;color:white;margin-bottom:5px}
-.page-sub{color:rgba(255,255,255,.4);font-size:15px;margin-bottom:30px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.card{background:rgba(255,255,255,.05);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.1);transition:.3s;position:relative}
-.card:hover{transform:translateY(-5px);border-color:rgba(255,68,88,.4);box-shadow:0 15px 40px rgba(255,68,88,.2)}
-.card-photo{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:60px;background:linear-gradient(135deg,#1a1a2e,#2d1b3d);position:relative;overflow:hidden}
-.card-photo img{width:100%;height:100%;object-fit:cover}
-.card-gradient{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.95),transparent)}
-.card-info{position:absolute;bottom:0;left:0;right:0;padding:15px}
-.card-name{font-size:18px;font-weight:900;color:white}
-.card-city{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px}
-.card-actions{display:flex;gap:8px;margin-top:10px}
-.btn-like{flex:1;padding:10px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border:none;border-radius:20px;font-size:13px;font-weight:bold;cursor:pointer;transition:.2s}
-.btn-like:hover{transform:scale(1.05)}
+:root{--pink:#ff4d6d;--pink2:#ff85a1;--dark:#0d0d1a;--green:#06d6a0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min-height:100%;padding-bottom:90px}
+
+.page-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:54px 20px 14px;
+  background:rgba(13,13,26,.95);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(20px);
+}
+.page-title{font-size:24px;font-weight:900;letter-spacing:-.5px}
+.page-title span{color:var(--pink)}
+.page-sub{color:rgba(255,255,255,.35);font-size:13px;font-weight:600;margin-top:2px}
+
+.count-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,77,109,.1);color:var(--pink);
+  padding:6px 14px;border-radius:50px;
+  font-size:13px;font-weight:800;
+  border:1px solid rgba(255,77,109,.2);
+  margin-top:10px;
+}
+
+.container{padding:0 16px;margin-top:140px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.card{
+  border-radius:20px;overflow:hidden;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  position:relative;transition:.2s;
+}
+.card:active{transform:scale(.97)}
+.card-photo{
+  width:100%;aspect-ratio:3/4;
+  display:flex;align-items:center;justify-content:center;
+  font-size:60px;
+  background:linear-gradient(135deg,#1a0a2e,#2d1040);
+  position:relative;overflow:hidden;
+}
+.card-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.card-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.95) 100%);
+}
+.card-info{position:absolute;bottom:0;left:0;right:0;padding:12px}
+.card-name{font-size:15px;font-weight:900}
+.card-city{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;font-weight:600}
+.card-actions{display:flex;gap:6px;margin-top:8px}
+.btn-like{
+  flex:1;padding:9px 6px;
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  color:white;border:none;border-radius:50px;
+  font-size:12px;font-weight:800;cursor:pointer;
+  font-family:'Nunito',sans-serif;transition:.2s;
+}
+.btn-like:active{transform:scale(.95)}
 .btn-like.liked{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
-.btn-view{padding:10px 14px;background:rgba(255,255,255,.1);color:white;border:none;border-radius:20px;font-size:13px;cursor:pointer}
-.heart-badge{position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;font-size:18px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(255,68,88,.5);z-index:2}
-.empty{text-align:center;padding:80px 20px;color:rgba(255,255,255,.3)}
-.empty-icon{font-size:80px;margin-bottom:20px;animation:float 3s ease-in-out infinite;display:block}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-.empty h3{font-size:24px;margin-bottom:10px;color:rgba(255,255,255,.5)}
-.count-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,68,88,.15);color:#ff4458;padding:8px 18px;border-radius:50px;font-size:14px;font-weight:bold;border:1px solid rgba(255,68,88,.3);margin-bottom:25px}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,26,.95);display:flex;justify-content:center;gap:30px;padding:10px 0 20px;border-top:1px solid rgba(255,255,255,.1);z-index:40}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:rgba(255,255,255,.5);font-size:11px}
-.bottom-nav a.active,.bottom-nav a:hover{color:#ff6b6b}
-.bottom-nav a span{font-size:22px}
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#ff4458;color:white;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:bold;z-index:999;opacity:0;transition:.3s;white-space:nowrap}
-.toast.show{opacity:1}
+.heart-badge{
+  position:absolute;top:10px;right:10px;
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  color:white;font-size:14px;
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(255,77,109,.5);z-index:2;
+}
+
+.empty{
+  text-align:center;padding:60px 20px;
+  display:flex;flex-direction:column;align-items:center;
+  margin-top:60px;
+}
+.empty-emoji{font-size:64px;margin-bottom:16px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.empty h3{font-size:20px;font-weight:900;margin-bottom:8px}
+.empty p{color:rgba(255,255,255,.35);font-size:14px;line-height:1.6}
+.empty-btn{
+  margin-top:24px;padding:14px 28px;
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  border:none;border-radius:50px;color:white;
+  font-size:15px;font-weight:800;cursor:pointer;
+  font-family:'Nunito',sans-serif;
+}
+
+/* MATCH TOAST */
+.toast{
+  position:fixed;top:60px;left:16px;right:16px;
+  background:linear-gradient(135deg,rgba(255,77,109,.95),rgba(255,133,161,.95));
+  color:white;padding:14px 20px;border-radius:20px;
+  font-size:15px;font-weight:800;z-index:999;
+  transform:translateY(-120px);transition:.4s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(255,77,109,.4);
+}
+.toast.show{transform:translateY(0)}
+
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:80px;
+  background:rgba(13,13,26,.95);
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:space-around;
+  padding:0 10px;backdrop-filter:blur(20px);z-index:100;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  text-decoration:none;color:rgba(255,255,255,.35);
+  font-size:10px;font-weight:700;padding:6px 12px;
+  border-radius:16px;transition:.2s;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.nav-item.active{color:var(--pink)}
+.nav-item.active .nav-icon{background:rgba(255,77,109,.15);border-color:rgba(255,77,109,.3)}
+.nav-icon{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid transparent;transition:.2s}
 </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
-<script>
-const c=document.getElementById('stars'),ctx=c.getContext('2d');
-c.width=window.innerWidth;c.height=window.innerHeight;
-const stars=Array.from({length:250},()=>({x:Math.random()*c.width-c.width/2,y:Math.random()*c.height-c.height/2,z:Math.random()*c.width,pz:0}));
-const nebula=Array.from({length:4},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*200+100,hue:Math.random()*60+270,o:Math.random()*.06+.02}));
-function draw(){
-  ctx.fillStyle='rgba(10,10,26,.2)';ctx.fillRect(0,0,c.width,c.height);
-  nebula.forEach(n=>{const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);g.addColorStop(0,`hsla(${n.hue},80%,60%,${n.o})`);g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();});
-  stars.forEach(s=>{s.pz=s.z;s.z-=2;if(s.z<=0){s.x=Math.random()*c.width-c.width/2;s.y=Math.random()*c.height-c.height/2;s.z=c.width;s.pz=s.z;}
-  const sx=(s.x/s.z)*c.width+c.width/2,sy=(s.y/s.z)*c.height+c.height/2,px=(s.x/s.pz)*c.width+c.width/2,py=(s.y/s.pz)*c.height+c.height/2;
-  const size=Math.max(.5,(1-s.z/c.width)*3),bright=1-s.z/c.width;
-  ctx.strokeStyle=`rgba(255,255,255,${bright})`;ctx.lineWidth=size;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(sx,sy);ctx.stroke();});
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
 
 <div class="toast" id="toast"></div>
 
-<div class="header">
-  <a href="/" class="logo">🌹 Zhanym</a>
-  <div class="nav">
-    <a href="/dashboard">🔥 Лента</a>
-    <a href="/chat">💬 Чат</a>
-    <a href="#" onclick="logout()">Выйти</a>
-  </div>
+<div class="page-header">
+  <div class="page-title">💛 <span>Лайки</span></div>
+  <div class="page-sub">Люди которым ты понравился</div>
+  <div class="count-pill" id="countPill" style="display:none">❤️ <span id="countNum">0</span> человек лайкнули тебя</div>
 </div>
 
 <div class="container">
-  <div class="page-title">💛 Кто лайкнул тебя</div>
-  <div class="page-sub">Люди которым ты понравился</div>
-  <div id="countBadge" style="display:none" class="count-badge">❤️ <span id="countNum">0</span> человек лайкнули тебя</div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
-    <span class="empty-icon">💫</span>
+    <div class="empty-emoji">💫</div>
     <h3>Пока никто не лайкнул</h3>
-    <p>Свайпай больше — и лайки придут!</p>
+    <p>Свайпай больше —<br>и лайки придут!</p>
+    <button class="empty-btn" onclick="window.location.href='/dashboard'">🔥 Свайпать</button>
   </div>
 </div>
 
-<div class="bottom-nav">
-  <a href="/dashboard"><span>🔥</span>Свайпить</a>
-  <a href="/search"><span>🔍</span>Поиск</a>
-  <a href="/likes" class="active"><span>💛</span>Лайки</a>
-  <a href="/chat"><span>✍🏻</span>Написать</a>
-  <a href="/profile"><span>👤</span>Профиль</a>
-</div>
+<nav class="bottom-nav">
+  <a href="/dashboard" class="nav-item"><div class="nav-icon">🔥</div>Лента</a>
+  <a href="/likes" class="nav-item active"><div class="nav-icon">💛</div>Лайки</a>
+  <a href="/chat" class="nav-item"><div class="nav-icon">💬</div>Чат</a>
+  <a href="/profile" class="nav-item"><div class="nav-icon">👤</div>Профиль</a>
+</nav>
 
 <script>
-const token = localStorage.getItem('token');
-if(!token) window.location.href = '/login';
-let likedBack = new Set();
+const token=localStorage.getItem('token');
+if(!token) window.location.href='/login';
+let likedBack=new Set();
 
 async function loadLikes(){
-  const res = await fetch('/search/who_liked_me', {headers:{'Authorization':'Bearer '+token}});
-  const users = await res.json();
-  if(!users.length){
-    document.getElementById('empty').style.display = 'block';
-    return;
-  }
-  document.getElementById('countBadge').style.display = 'inline-flex';
-  document.getElementById('countNum').textContent = users.length;
-  document.getElementById('grid').innerHTML = users.map(u => `
+  const res=await fetch('/search/who_liked_me',{headers:{'Authorization':'Bearer '+token}});
+  if(res.status===401){window.location.href='/login';return;}
+  const users=await res.json();
+  if(!users.length){document.getElementById('empty').style.display='flex';return;}
+  document.getElementById('countPill').style.display='inline-flex';
+  document.getElementById('countNum').textContent=users.length;
+  document.getElementById('grid').innerHTML=users.map(u=>`
     <div class="card">
       <div class="heart-badge">❤️</div>
       <div class="card-photo">
-        ${u.photo && u.photo !== 'default.jpg'
-          ? `<img src="/static/uploads/${u.photo}">`
-          : `<span>${u.gender==='female'?'👩':'👨'}</span>`}
+        ${u.photo&&u.photo!=='default.jpg'
+          ?`<img src="/static/uploads/${u.photo}">`
+          :`<span>${u.gender==='female'?'👩':'👨'}</span>`}
         <div class="card-gradient"></div>
         <div class="card-info">
           <div class="card-name">${u.name}, ${u.age}</div>
           <div class="card-city">📍 ${u.city||''}</div>
           <div class="card-actions">
-            <button class="btn-like" id="like-${u.id}" onclick="likeBack(${u.id})">❤️ Лайкнуть в ответ</button>
-            <button class="btn-view" onclick="viewProfile(${u.id})">👁</button>
+            <button class="btn-like" id="like-${u.id}" onclick="likeBack(${u.id})">❤️ Лайкнуть</button>
           </div>
         </div>
       </div>
@@ -129,19 +183,22 @@ async function loadLikes(){
 }
 
 async function likeBack(userId){
-  const btn = document.getElementById('like-'+userId);
+  const btn=document.getElementById('like-'+userId);
   if(likedBack.has(userId)) return;
-  const res = await fetch('/search/like/'+userId, {method:'POST', headers:{'Authorization':'Bearer '+token}});
-  const data = await res.json();
+  const res=await fetch('/search/like/'+userId,{method:'POST',headers:{'Authorization':'Bearer '+token}});
+  const data=await res.json();
   likedBack.add(userId);
-  btn.textContent = '✓ Лайкнул';
+  btn.textContent='✓ Лайкнул';
   btn.classList.add('liked');
-  showToast(data.message.includes('Взаимный') ? '🎉 Это матч!' : '❤️ Лайк отправлен!');
+  showToast(data.message&&data.message.includes('Пара')?'🎉 Это матч! Пишите друг другу!':'❤️ Лайк отправлен!');
 }
 
-function viewProfile(userId){ window.location.href = '/profile/'+userId; }
-function showToast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000); }
-function logout(){ localStorage.removeItem('token'); window.location.href='/'; }
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
 loadLikes();
 </script>
 </body>

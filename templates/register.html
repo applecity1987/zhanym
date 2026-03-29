@@ -2,70 +2,452 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Регистрация — Zhanym</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Zhanym — Регистрация</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:url('/static/hero.jpg') center center/cover no-repeat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.box{background:#fff;border-radius:30px;padding:40px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-h1{text-align:center;color:#ff6b6b;margin-bottom:5px;font-size:28px}
-.sub{text-align:center;color:#aaa;margin-bottom:25px;font-size:14px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.group{margin-bottom:15px}
-label{display:block;font-size:13px;color:#666;margin-bottom:5px;font-weight:bold}
-input,select{width:100%;padding:12px 15px;border:2px solid #eee;border-radius:12px;font-size:15px;outline:none}
-input:focus,select:focus{border-color:#ff6b6b}
-.btn{width:100%;padding:15px;background:url('/static/hero.jpg') center center/cover no-repeat;color:#fff;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
-.login{text-align:center;margin-top:15px;color:#aaa;font-size:14px}
-.login a{color:#ff6b6b;text-decoration:none;font-weight:bold}
-.error{background:#ffe0e0;color:#ff4444;padding:10px 15px;border-radius:10px;margin-bottom:15px;font-size:14px;display:none}
-.success{background:#e0ffe0;color:#44aa44;padding:10px 15px;border-radius:10px;margin-bottom:15px;font-size:14px;display:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:'Nunito',sans-serif;background:#0d0d1a;color:white}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 20%,rgba(255,77,109,.2) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,133,161,.15) 0%,transparent 50%),#0d0d1a;pointer-events:none}
+.bg-circles{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.circle{position:absolute;border-radius:50%;background:linear-gradient(135deg,rgba(255,77,109,.12),rgba(255,133,161,.08));animation:float 8s ease-in-out infinite}
+.circle:nth-child(1){width:300px;height:300px;top:-100px;right:-80px;animation-delay:0s}
+.circle:nth-child(2){width:200px;height:200px;bottom:200px;left:-60px;animation-delay:3s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 24px 50px}
+
+.logo-wrap{text-align:center;margin-bottom:28px}
+.logo-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 12px 30px rgba(255,77,109,.4)}
+.logo-title{font-size:26px;font-weight:900;letter-spacing:-1px}
+.logo-title span{color:#ff4d6d}
+.logo-sub{color:rgba(255,255,255,.4);font-size:13px;margin-top:4px;font-weight:600}
+
+.steps{display:flex;align-items:center;gap:0;margin-bottom:28px;width:100%;max-width:400px}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;top:16px;left:calc(50% + 16px);right:calc(-50% + 16px);height:2px;background:rgba(255,255,255,.1);z-index:0}
+.step:not(:last-child).done::after{background:rgba(255,77,109,.4)}
+.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:2px solid rgba(255,255,255,.15);color:rgba(255,255,255,.3);background:rgba(255,255,255,.05);transition:.3s;position:relative;z-index:1}
+.step.active .step-circle{background:linear-gradient(135deg,#ff4d6d,#ff85a1);border-color:transparent;color:white;box-shadow:0 4px 15px rgba(255,77,109,.4)}
+.step.done .step-circle{background:rgba(255,77,109,.2);border-color:#ff4d6d;color:#ff4d6d}
+.step-label{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.step.active .step-label{color:#ff4d6d}
+
+.card{width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:24px 20px;backdrop-filter:blur(20px)}
+.card-title{font-size:20px;font-weight:900;margin-bottom:6px}
+.card-sub{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px;font-weight:600}
+
+.error{background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.3);color:#ff85a1;padding:12px 16px;border-radius:14px;font-size:14px;font-weight:600;margin-bottom:16px;display:none;text-align:center}
+.success{background:rgba(6,214,160,.12);border:1px solid rgba(6,214,160,.3);color:#06d6a0;padding:12px 16px;border-radius:14px;font-size:14px;font-weight:600;margin-bottom:16px;display:none;text-align:center}
+
+.group{margin-bottom:14px}
+.group label{display:block;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);margin-bottom:7px;letter-spacing:1px;text-transform:uppercase}
+.input-wrap{position:relative}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.group input,.group select{
+  width:100%;padding:14px 14px 14px 44px;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:14px;color:white;
+  font-size:15px;font-family:'Nunito',sans-serif;font-weight:600;
+  outline:none;transition:.2s;-webkit-appearance:none;
+}
+.group select{padding-left:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,.3)' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.group input::placeholder{color:rgba(255,255,255,.2)}
+.group input:focus,.group select:focus{border-color:#ff4d6d;background:rgba(255,77,109,.08);box-shadow:0 0 0 3px rgba(255,77,109,.1)}
+.group select option{background:#1a1a2e;color:white}
+
+.gender-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.gender-btn{padding:14px;border-radius:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:.2s;text-align:center}
+.gender-btn.active{background:rgba(255,77,109,.15);border-color:#ff4d6d;color:#ff4d6d;box-shadow:0 4px 15px rgba(255,77,109,.2)}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.btn-next{width:100%;padding:16px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);border:none;border-radius:50px;color:white;font-size:16px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:8px;box-shadow:0 10px 25px rgba(255,77,109,.4);transition:.2s;letter-spacing:.5px}
+.btn-next:active{transform:scale(.97)}
+.btn-back{width:100%;padding:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:50px;color:rgba(255,255,255,.6);font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:10px;transition:.2s}
+.btn-back:active{transform:scale(.97)}
+
+.login-link{text-align:center;margin-top:20px;color:rgba(255,255,255,.35);font-size:14px;font-weight:600}
+.login-link a{color:#ff4d6d;text-decoration:none;font-weight:800}
+
+.step-panel{display:none}
+.step-panel.active{display:block}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{padding:8px 14px;border-radius:50px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif}
+.chip.active{background:rgba(255,77,109,.15);border-color:#ff4d6d;color:#ff4d6d}
 </style>
 </head>
 <body>
-<div class="box">
-<div style="text-align:center;font-size:40px;margin-bottom:10px">💕</div>
-<h1>Создать аккаунт</h1>
-<p class="sub">Найди свою вторую половинку</p>
-<div class="error" id="error"></div>
-<div class="success" id="success"></div>
-<div class="row">
-<div class="group"><label>Имя</label><input type="text" id="name" placeholder="Алия"></div>
-<div class="group"><label>Возраст</label><input type="number" id="age" placeholder="25" min="18"></div>
+<div class="bg"></div>
+<div class="bg-circles"><div class="circle"></div><div class="circle"></div></div>
+
+<div class="page">
+  <div class="logo-wrap">
+    <div class="logo-icon">🌹</div>
+    <div class="logo-title">Zha<span>nym</span></div>
+    <div class="logo-sub">Создай аккаунт</div>
+  </div>
+
+  <div class="steps" id="stepsBar">
+    <div class="step active" id="s1"><div class="step-circle">1</div><div class="step-label">Данные</div></div>
+    <div class="step" id="s2"><div class="step-circle">2</div><div class="step-label">Аккаунт</div></div>
+    <div class="step" id="s3"><div class="step-circle">3</div><div class="step-label">О себе</div></div>
+  </div>
+
+  <div class="card">
+    <div class="error" id="error"></div>
+    <div class="success" id="success"></div>
+
+    <!-- STEP 1 -->
+    <div class="step-panel active" id="panel1">
+      <div class="card-title">👋 Привет!</div>
+      <div class="card-sub">Расскажи немного о себе</div>
+      <div class="row">
+        <div class="group">
+          <label>Имя</label>
+          <div class="input-wrap">
+            <span class="input-icon">✨</span>
+            <input type="text" id="name" placeholder="Алия">
+          </div>
+        </div>
+        <div class="group">
+          <label>Возраст</label>
+          <div class="input-wrap">
+            <span class="input-icon">🎂</span>
+            <input type="number" id="age" placeholder="25" min="18" max="99">
+          </div>
+        </div>
+      </div>
+      <div class="group">
+        <label>Пол</label>
+        <div class="gender-toggle">
+          <button class="gender-btn" id="gMale" onclick="setGender('male')">👨 Мужской</button>
+          <button class="gender-btn" id="gFemale" onclick="setGender('female')">👩 Женский</button>
+        </div>
+      </div>
+      <div class="group">
+        <label>Город</label>
+        <div class="input-wrap">
+          <span class="input-icon">📍</span>
+          <select id="city">
+            <option value="">Выбери город</option>
+            <option>Алматы</option><option>Астана</option><option>Шымкент</option>
+            <option>Қарағанды</option><option>Ақтөбе</option><option>Тараз</option>
+            <option>Павлодар</option><option>Өскемен</option><option>Семей</option>
+            <option>Атырау</option><option>Қостанай</option><option>Қызылорда</option>
+            <option>Орал</option><option>Петропавл</option><option>Ақтау</option>
+            <option>Темиртау</option><option>Түркістан</option><option>Көкшетау</option>
+            <option>Талдықорған</option><option>Екібастұз</option><option>Рудный</option>
+            <option>Жезқазған</option><option>Балқаш</option><option>Байқоңыр</option>
+            <option>Қонаев</option><option>Жаңаөзен</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-next" onclick="goStep2()">Далее →</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel" id="panel2">
+      <div class="card-title">🔐 Аккаунт</div>
+      <div class="card-sub">Создай логин и пароль</div>
+      <div class="group">
+        <label>Номер телефона</label>
+        <div class="input-wrap">
+          <span class="input-icon">📱</span>
+          <input type="tel" id="phone" placeholder="+7 (777) 123 45 67" autocomplete="tel">
+        </div>
+      </div>
+      <div class="group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input type="email" id="email" placeholder="email@mail.ru" autocomplete="email">
+        </div>
+      </div>
+      <div class="group">
+        <label>Логин</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="username" placeholder="username" autocomplete="username">
+        </div>
+      </div>
+      <div class="group">
+        <label>Пароль</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" placeholder="Минимум 8 символов" autocomplete="new-password">
+        </div>
+      </div>
+      <button class="btn-next" onclick="goStep3()">Далее →</button>
+      <button class="btn-back" onclick="goStep(1)">← Назад</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel" id="panel3">
+      <div class="card-title">💬 О себе</div>
+      <div class="card-sub">Необязательно, можно заполнить позже</div>
+
+      <div class="group">
+        <label>О себе</label>
+        <div class="input-wrap">
+          <span class="input-icon" style="top:18px;transform:none">✍️</span>
+          <textarea id="bio" placeholder="Расскажи о себе..." rows="3"
+            style="width:100%;padding:14px 14px 14px 44px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:white;font-size:15px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;resize:none;-webkit-appearance:none"></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="group">
+          <label>Рост (см)</label>
+          <div class="input-wrap">
+            <span class="input-icon">📏</span>
+            <input type="number" id="height" placeholder="170" min="140" max="220">
+          </div>
+        </div>
+        <div class="group">
+          <label>Знак зодиака</label>
+          <div class="input-wrap">
+            <span class="input-icon">♈</span>
+            <select id="zodiac">
+              <option value="">Выбери</option>
+              <option>♈ Овен</option><option>♉ Телец</option><option>♊ Близнецы</option>
+              <option>♋ Рак</option><option>♌ Лев</option><option>♍ Дева</option>
+              <option>♎ Весы</option><option>♏ Скорпион</option><option>♐ Стрелец</option>
+              <option>♑ Козерог</option><option>♒ Водолей</option><option>♓ Рыбы</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🎯 Что ищешь?</label>
+        <div class="chips" id="goalChips">
+          <div class="chip" onclick="toggleChip(this,'goal')">💘 Долгосрочный партнёр</div>
+          <div class="chip" onclick="toggleChip(this,'goal')">😍 Долго- или краткосрочно</div>
+          <div class="chip" onclick="toggleChip(this,'goal')">🥂 Краткосрочные отношения</div>
+          <div class="chip" onclick="toggleChip(this,'goal')">🎉 Просто повеселиться</div>
+          <div class="chip" onclick="toggleChip(this,'goal')">👋 Найти друзей</div>
+          <div class="chip" onclick="toggleChip(this,'goal')">🤔 Всё ещё разбираюсь</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🏋️ Спорт</label>
+        <div class="chips" id="sportChips">
+          <div class="chip" onclick="toggleChip(this,'sport')">Каждый день</div>
+          <div class="chip" onclick="toggleChip(this,'sport')">Часто</div>
+          <div class="chip" onclick="toggleChip(this,'sport')">Иногда</div>
+          <div class="chip" onclick="toggleChip(this,'sport')">Никогда</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🍷 Алкоголь</label>
+        <div class="chips" id="drinkChips">
+          <div class="chip" onclick="toggleChip(this,'drink')">Не пью</div>
+          <div class="chip" onclick="toggleChip(this,'drink')">Я за трезвость</div>
+          <div class="chip" onclick="toggleChip(this,'drink')">По особым случаям</div>
+          <div class="chip" onclick="toggleChip(this,'drink')">По выходным</div>
+          <div class="chip" onclick="toggleChip(this,'drink')">Почти каждый вечер</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🚬 Курение</label>
+        <div class="chips" id="smokeChips">
+          <div class="chip" onclick="toggleChip(this,'smoke')">Не курю</div>
+          <div class="chip" onclick="toggleChip(this,'smoke')">Бросаю</div>
+          <div class="chip" onclick="toggleChip(this,'smoke')">Курю за компанию</div>
+          <div class="chip" onclick="toggleChip(this,'smoke')">Курю</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🐾 Питомцы</label>
+        <div class="chips" id="petChips">
+          <div class="chip" onclick="toggleChip(this,'pet')">Собака</div>
+          <div class="chip" onclick="toggleChip(this,'pet')">Кошка</div>
+          <div class="chip" onclick="toggleChip(this,'pet')">Птица</div>
+          <div class="chip" onclick="toggleChip(this,'pet')">Рыбки</div>
+          <div class="chip" onclick="toggleChip(this,'pet')">Нет питомцев</div>
+          <div class="chip" onclick="toggleChip(this,'pet')">Хочу питомца</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>💬 Стиль общения</label>
+        <div class="chips" id="communicationChips">
+          <div class="chip" onclick="toggleChip(this,'communication')">Много переписываюсь</div>
+          <div class="chip" onclick="toggleChip(this,'communication')">Общаюсь по телефону</div>
+          <div class="chip" onclick="toggleChip(this,'communication')">Люблю видеочаты</div>
+          <div class="chip" onclick="toggleChip(this,'communication')">Лучше встречусь лично</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>❤️ Язык любви</label>
+        <div class="chips" id="loveChips">
+          <div class="chip" onclick="toggleChip(this,'love_language')">Жесты внимания</div>
+          <div class="chip" onclick="toggleChip(this,'love_language')">Подарки</div>
+          <div class="chip" onclick="toggleChip(this,'love_language')">Прикосновения</div>
+          <div class="chip" onclick="toggleChip(this,'love_language')">Комплименты</div>
+          <div class="chip" onclick="toggleChip(this,'love_language')">Время вместе</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🎓 Образование</label>
+        <div class="chips" id="educationChips">
+          <div class="chip" onclick="toggleChip(this,'education')">Средняя школа</div>
+          <div class="chip" onclick="toggleChip(this,'education')">Техникум</div>
+          <div class="chip" onclick="toggleChip(this,'education')">Бакалавриат</div>
+          <div class="chip" onclick="toggleChip(this,'education')">Магистратура</div>
+          <div class="chip" onclick="toggleChip(this,'education')">Аспирантура</div>
+          <div class="chip" onclick="toggleChip(this,'education')">Доктор наук</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <label>🎮 Интересы и хобби</label>
+        <div class="chips" id="interestsChips">
+          <div class="chip" onclick="toggleMulti(this,'interests')">🎮 Игры</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">📚 Чтение</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🎵 Музыка</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">✈️ Путешествия</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🍳 Кулинария</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🎨 Творчество</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🏃 Бег</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🎬 Кино</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">📸 Фото</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">💻 Технологии</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🌿 Природа</div>
+          <div class="chip" onclick="toggleMulti(this,'interests')">🧘 Йога</div>
+        </div>
+      </div>
+
+      <button class="btn-next" onclick="register()">🎉 Создать аккаунт</button>
+      <button class="btn-back" onclick="goStep(2)">← Назад</button>
+    </div>
+  </div>
+
+  <div class="login-link">Уже есть аккаунт? <a href="/login">Войти</a></div>
 </div>
-<div class="group"><label>Email</label><input type="email" id="email" placeholder="email@mail.ru"></div>
-<div class="group"><label>Логин</label><input type="text" id="username" placeholder="username"></div>
-<div class="group"><label>Пароль</label><input type="password" id="password" placeholder="********"></div>
-<div class="row">
-<div class="group"><label>Пол</label><select id="gender"><option value="">Выбери</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
-<div class="group"><label>Город</label><select id="city" style="width:100%;padding:15px;border:2px solid #eee;border-radius:12px;font-size:16px;color:#333;background:white"><option value="">Выбери город</option><option>Алматы</option><option>Астана</option><option>Шымкент</option>
-    <option>Қарағанды</option><option>Ақтөбе</option><option>Тараз</option><option>Павлодар</option><option>Өскемен</option><option>Семей</option><option>Атырау</option><option>Қостанай</option><option>Қызылорда</option><option>Орал</option><option>Петропавл</option><option>Ақтау</option><option>Темиртау</option><option>Түркістан</option>
-    <option>Көкшетау</option><option>Талдықорған</option><option>Екібастұз</option><option>Рудный</option><option>Жезқазған</option><option>Балқаш</option><option>Сатпаев</option><option>Байқоңыр</option><option>Қонаев</option><option>Жаңаөзен</option><option>Лисаковск</option><option>Степногорск</option><option>Алтай</option></select></div>
-</div>
-<button class="btn" onclick="register()">Зарегистрироваться</button>
-<p class="login">Уже есть аккаунт? <a href="/login">Войти</a></p>
-</div>
+
 <script>
-async function register() {
-  const name = document.getElementById('name').value;
-  const age = document.getElementById('age').value;
-  const email = document.getElementById('email').value;
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const gender = document.getElementById('gender').value;
-  const city = document.getElementById('city').value;
-  if(!name||!age||!email||!username||!password||!gender||!city){
-    showError('Заполни все поля'); return;
-  }
-  try {
-    const res = await fetch('/register?email='+email+'&username='+username+'&password='+password+'&name='+name+'&age='+age+'&gender='+gender+'&city='+city, {method:'POST'});
-    const data = await res.json();
-    if(res.ok){ showSuccess('Аккаунт создан'); setTimeout(()=>window.location.href='/onboarding',1500); }
-    else { showError(data.detail||'Ошибка'); }
-  } catch(e){ showError('Ошибка сервера'); }
+let selectedGender = '';
+const chipValues = {goal:'',sport:'',drink:'',smoke:'',pet:'',communication:'',love_language:'',education:''};
+const multiValues = {interests:[]};
+
+function toggleChip(el, field){
+  const parent = el.parentElement;
+  parent.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  chipValues[field] = el.textContent.trim();
 }
-function showError(msg){ const el=document.getElementById('error'); el.textContent=msg; el.style.display='block'; }
-function showSuccess(msg){ const el=document.getElementById('success'); el.textContent=msg; el.style.display='block'; }
+
+function toggleMulti(el, field){
+  el.classList.toggle('active');
+  const val = el.textContent.trim();
+  if(el.classList.contains('active')){
+    if(!multiValues[field].includes(val)) multiValues[field].push(val);
+  } else {
+    multiValues[field] = multiValues[field].filter(v=>v!==val);
+  }
+}
+
+function setGender(g){
+  selectedGender = g;
+  document.getElementById('gMale').classList.toggle('active', g==='male');
+  document.getElementById('gFemale').classList.toggle('active', g==='female');
+}
+
+function goStep(n){
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel'+n).classList.add('active');
+  for(let i=1;i<=3;i++){
+    const s = document.getElementById('s'+i);
+    s.classList.remove('active','done');
+    if(i<n) s.classList.add('done');
+    else if(i===n) s.classList.add('active');
+  }
+  hideAlerts();
+  window.scrollTo(0,0);
+}
+
+function goStep2(){
+  const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value;
+  const city = document.getElementById('city').value;
+  if(!name){showError('Введи имя');return;}
+  if(!age||age<18){showError('Возраст от 18 лет');return;}
+  if(!selectedGender){showError('Выбери пол');return;}
+  if(!city){showError('Выбери город');return;}
+  goStep(2);
+}
+
+function goStep3(){
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  if(!phone){showError('Введи номер телефона');return;}
+  if(!email){showError('Введи email');return;}
+  if(!username){showError('Введи логин');return;}
+  if(!password||password.length<6){showError('Пароль минимум 8 символов');return;}
+  goStep(3);
+}
+
+async function register(){
+  const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value;
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const city = document.getElementById('city').value;
+  const bio = document.getElementById('bio').value.trim();
+  const height = document.getElementById('height').value;
+  const zodiac = document.getElementById('zodiac').value;
+
+  const btn = document.querySelector('#panel3 .btn-next');
+  btn.textContent = 'Создаём аккаунт...';
+  btn.style.opacity='.7';btn.style.pointerEvents='none';
+
+  try{
+    let url = `/register?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&name=${encodeURIComponent(name)}&age=${age}&gender=${selectedGender}&city=${encodeURIComponent(city)}&phone=${encodeURIComponent(phone)}`;
+    if(bio) url += `&bio=${encodeURIComponent(bio)}`;
+    if(height) url += `&height=${height}`;
+    if(zodiac) url += `&zodiac=${encodeURIComponent(zodiac)}`;
+    if(chipValues.goal) url += `&goal=${encodeURIComponent(chipValues.goal)}`;
+    if(chipValues.sport) url += `&sport=${encodeURIComponent(chipValues.sport)}`;
+    if(chipValues.drink) url += `&drink=${encodeURIComponent(chipValues.drink)}`;
+    if(chipValues.smoke) url += `&smoke=${encodeURIComponent(chipValues.smoke)}`;
+    if(chipValues.pet) url += `&pet=${encodeURIComponent(chipValues.pet)}`;
+    if(chipValues.communication) url += `&communication=${encodeURIComponent(chipValues.communication)}`;
+    if(chipValues.love_language) url += `&love_language=${encodeURIComponent(chipValues.love_language)}`;
+    if(chipValues.education) url += `&education=${encodeURIComponent(chipValues.education)}`;
+    if(multiValues.interests.length) url += `&interests=${encodeURIComponent(multiValues.interests.join(', '))}`;
+
+    const res = await fetch(url, {method:'POST'});
+    const data = await res.json();
+    if(res.ok){
+      showSuccess('🎉 Аккаунт создан!');
+      setTimeout(()=>window.location.href='/dashboard', 1500);
+    } else {
+      showError(data.detail||'Ошибка регистрации');
+      btn.textContent='🎉 Создать аккаунт';btn.style.opacity='1';btn.style.pointerEvents='auto';
+    }
+  }catch(e){
+    showError('Ошибка сервера');
+    btn.textContent='🎉 Создать аккаунт';btn.style.opacity='1';btn.style.pointerEvents='auto';
+  }
+}
+
+function showError(msg){const el=document.getElementById('error');el.textContent='⚠️ '+msg;el.style.display='block';document.getElementById('success').style.display='none';}
+function showSuccess(msg){const el=document.getElementById('success');el.textContent=msg;el.style.display='block';document.getElementById('error').style.display='none';}
+function hideAlerts(){document.getElementById('error').style.display='none';document.getElementById('success').style.display='none';}
 </script>
 </body>
 </html>

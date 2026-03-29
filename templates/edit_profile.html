@@ -2,321 +2,418 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Редактировать профиль — Zhanym</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0d0d1a;min-height:100vh;padding-bottom:80px}
-.header{background:rgba(0,0,0,.6);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px);position:fixed;top:0;width:100%;z-index:100}
-.logo{font-size:22px;font-weight:bold;color:white;text-decoration:none}
-.back{color:rgba(255,255,255,.7);font-size:13px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);text-decoration:none}
-.back:hover{background:rgba(255,255,255,.1)}
-.container{max-width:900px;margin:0 auto;padding:90px 20px 20px}
-.section{background:rgba(255,255,255,.05);border-radius:20px;padding:30px;border:1px solid rgba(255,255,255,.1);margin-bottom:15px}
-.section-title{font-size:18px;font-weight:bold;color:white;margin-bottom:20px;display:flex;align-items:center;gap:8px}
-.group{margin-bottom:15px}
-label{display:block;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
-input,select,textarea{width:100%;padding:13px 15px;border:2px solid rgba(255,255,255,.1);border-radius:12px;font-size:15px;outline:none;transition:.3s;background:rgba(255,255,255,.05);color:white}
-input:focus,select:focus,textarea:focus{border-color:#ff4458}
-select option{background:#1a1a2e}
-textarea{height:90px;resize:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:'Nunito',sans-serif;background:#0d0d1a;color:white;padding-bottom:100px}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 20%,rgba(255,77,109,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,133,161,.1) 0%,transparent 50%),#0d0d1a;pointer-events:none}
 
-/* ТЕГИ */
-.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.tag{padding:9px 16px;border:2px solid rgba(255,255,255,.1);border-radius:50px;font-size:13px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.6);background:rgba(255,255,255,.03)}
-.tag:hover{border-color:#ff4458;color:#ff4458}
-.tag.selected{background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border-color:transparent}
+/* HEADER */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 20px;display:flex;align-items:center;gap:12px;background:rgba(13,13,26,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.btn-back{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;text-decoration:none;flex-shrink:0}
+.header-title{font-size:17px;font-weight:900;flex:1}
+.btn-save-top{padding:8px 18px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);border:none;border-radius:50px;color:white;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer}
 
-.habit-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08)}
-.habit-section:last-child{border-bottom:none;margin-bottom:0}
-.habit-title{font-size:14px;font-weight:bold;color:rgba(255,255,255,.7);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+/* CONTENT */
+.page{position:relative;z-index:1;padding:80px 16px 20px}
 
-.btn{width:100%;padding:16px;background:linear-gradient(135deg,#ff4458,#fd79a8);color:white;border:none;border-radius:50px;font-size:17px;font-weight:bold;cursor:pointer;margin-top:5px;transition:.2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,68,88,.4)}
-.btn-logout{width:100%;padding:13px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);border-radius:50px;font-size:15px;cursor:pointer;margin-top:10px}
-.success{background:rgba(0,200,100,.2);color:#00c864;padding:10px 15px;border-radius:10px;margin-bottom:15px;font-size:14px;display:none;border:1px solid rgba(0,200,100,.3)}
-.counter{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px}
+/* PHOTO SECTION */
+.photo-section{text-align:center;margin-bottom:24px}
+.photo-wrap{position:relative;display:inline-block}
+.photo-avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #ff4d6d;background:rgba(255,77,109,.2);display:flex;align-items:center;justify-content:center;font-size:40px}
+.photo-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.photo-edit-btn{position:absolute;bottom:2px;right:2px;width:30px;height:30px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;border:2px solid #0d0d1a}
+.photo-name{font-size:18px;font-weight:900;margin-top:10px}
+.photo-sub{color:rgba(255,255,255,.4);font-size:13px;margin-top:3px}
+
+/* ALERT */
+.success{background:rgba(6,214,160,.12);border:1px solid rgba(6,214,160,.3);color:#06d6a0;padding:12px 16px;border-radius:14px;font-size:14px;font-weight:700;margin-bottom:16px;display:none;text-align:center}
+
+/* SECTION */
+.section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:18px 16px;margin-bottom:14px}
+.section-title{font-size:15px;font-weight:900;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* INPUT */
+.group{margin-bottom:14px}
+.group:last-child{margin-bottom:0}
+.group label{display:block;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);margin-bottom:7px;letter-spacing:1px;text-transform:uppercase}
+.input-wrap{position:relative}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+.group input,.group select,.group textarea{width:100%;padding:13px 13px 13px 42px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:white;font-size:15px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;transition:.2s;-webkit-appearance:none}
+.group textarea{padding-left:42px;resize:none;height:90px}
+.group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,.3)' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.group input::placeholder,.group textarea::placeholder{color:rgba(255,255,255,.2)}
+.group input:focus,.group select:focus,.group textarea:focus{border-color:#ff4d6d;background:rgba(255,77,109,.08)}
+.group select option{background:#1a1a2e;color:white}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* GENDER */
+.gender-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gender-btn{padding:13px;border-radius:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:.2s;text-align:center}
+.gender-btn.active{background:rgba(255,77,109,.15);border-color:#ff4d6d;color:#ff4d6d}
+
+/* TAGS / CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{padding:8px 14px;border-radius:50px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif}
+.chip.active{background:rgba(255,77,109,.15);border-color:#ff4d6d;color:#ff4d6d}
+.habit-label{font-size:13px;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:8px;margin-top:14px;display:flex;align-items:center;gap:6px}
+.habit-label:first-child{margin-top:0}
+
+/* INTEREST COUNTER */
+.interest-counter{font-size:12px;color:rgba(255,255,255,.35);font-weight:700;margin-bottom:8px}
+
+/* SAVE BTN */
+.btn-save{width:100%;padding:16px;background:linear-gradient(135deg,#ff4d6d,#ff85a1);border:none;border-radius:50px;color:white;font-size:16px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:8px;box-shadow:0 10px 25px rgba(255,77,109,.4);transition:.2s}
+.btn-save:active{transform:scale(.97)}
+.btn-logout{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:50px;color:rgba(255,255,255,.4);font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:10px;transition:.2s}
 </style>
 </head>
 <body>
+<div class="bg"></div>
 
 <div class="header">
-  <a href="/" class="logo">🌹 Zhanym</a>
-  <a href="/profile" class="back">← Назад</a>
+  <a href="/profile" class="btn-back">←</a>
+  <div class="header-title">✏️ Редактировать</div>
+  <button class="btn-save-top" onclick="saveProfile()">Сохранить</button>
 </div>
 
-<div class="container">
+<div class="page">
   <div class="success" id="success">✅ Профиль обновлён!</div>
+
+  <!-- ФОТО -->
+  <div class="photo-section">
+    <div class="photo-wrap">
+      <div class="photo-avatar" id="avatarWrap">
+        <span id="avatarEmoji">🌹</span>
+        <img id="avatarImg" src="" style="display:none">
+      </div>
+      <label for="photoInput" class="photo-edit-btn">📷</label>
+      <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+    </div>
+    <div class="photo-name" id="displayName">Загрузка...</div>
+    <div class="photo-sub">Нажми на камеру чтобы сменить фото</div>
+  </div>
 
   <!-- ОСНОВНОЕ -->
   <div class="section">
-    <div class="section-title">👤 Основная информация</div>
-    <div class="group"><label>Имя</label><input type="text" id="name" placeholder="Твоё имя"></div>
-    <div class="group"><label>Возраст</label><input type="number" id="age" placeholder="25" min="18" max="99"></div>
-      <div class="group"><label>Рост (см)</label><input type="number" id="height" placeholder="175" min="140" max="220"></div>
-    <div class="group"><label>Город</label>
-      <select id="city">
-        <option value="">Выбери город</option>
-        <option>Алматы</option><option>Астана</option><option>Шымкент</option>
-        <option>Қарағанды</option><option>Ақтөбе</option><option>Тараз</option>
-        <option>Павлодар</option><option>Өскемен</option><option>Семей</option>
-        <option>Атырау</option><option>Қостанай</option><option>Қызылорда</option>
-        <option>Орал</option><option>Петропавл</option><option>Ақтау</option>
-        <option>Темиртау</option><option>Түркістан</option><option>Көкшетау</option>
-        <option>Талдықорған</option><option>Екібастұз</option>
-      </select>
+    <div class="section-title">👤 Основное</div>
+    <div class="row">
+      <div class="group">
+        <label>Имя</label>
+        <div class="input-wrap">
+          <span class="input-icon">✨</span>
+          <input type="text" id="name" placeholder="Алия">
+        </div>
+      </div>
+      <div class="group">
+        <label>Возраст</label>
+        <div class="input-wrap">
+          <span class="input-icon">🎂</span>
+          <input type="number" id="age" placeholder="25" min="18" max="99">
+        </div>
+      </div>
     </div>
-    <div class="group"><label>Пол</label>
-      <select id="gender">
-        <option value="male">Мужской</option>
-        <option value="female">Женский</option>
-      </select>
+    <div class="row">
+      <div class="group">
+        <label>Рост (см)</label>
+        <div class="input-wrap">
+          <span class="input-icon">📏</span>
+          <input type="number" id="height" placeholder="170" min="140" max="220">
+        </div>
+      </div>
+      <div class="group">
+        <label>Город</label>
+        <div class="input-wrap">
+          <span class="input-icon">📍</span>
+          <select id="city">
+            <option value="">Город</option>
+            <option>Алматы</option><option>Астана</option><option>Шымкент</option>
+            <option>Қарағанды</option><option>Ақтөбе</option><option>Тараз</option>
+            <option>Павлодар</option><option>Өскемен</option><option>Семей</option>
+            <option>Атырау</option><option>Қостанай</option><option>Қызылорда</option>
+            <option>Орал</option><option>Петропавл</option><option>Ақтау</option>
+            <option>Темиртау</option><option>Түркістан</option><option>Көкшетау</option>
+            <option>Талдықорған</option><option>Екібастұз</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <div class="group"><label>О себе</label><textarea id="bio" placeholder="Расскажи о себе..."></textarea></div>
+    <div class="group">
+      <label>Пол</label>
+      <div class="gender-toggle">
+        <button class="gender-btn" id="gMale" onclick="setGender('male')">👨 Мужской</button>
+        <button class="gender-btn" id="gFemale" onclick="setGender('female')">👩 Женский</button>
+      </div>
+    </div>
+    <div class="group">
+      <label>О себе</label>
+      <div class="input-wrap">
+        <span class="input-icon" style="top:16px;transform:none">✍️</span>
+        <textarea id="bio" placeholder="Расскажи о себе..."></textarea>
+      </div>
+    </div>
   </div>
 
   <!-- ЦЕЛЬ -->
   <div class="section">
-    <div class="section-title">💘 Что ты ищешь?</div>
-    <div class="tags" id="goalTags">
-      <div class="tag" onclick="selectOne(this,'goal')">💘 Долгосрочный партнёр</div>
-      <div class="tag" onclick="selectOne(this,'goal')">😍 Долго- или краткосрочно</div>
-      <div class="tag" onclick="selectOne(this,'goal')">🥂 Краткосрочные отношения</div>
-      <div class="tag" onclick="selectOne(this,'goal')">🎉 Просто повеселиться</div>
-      <div class="tag" onclick="selectOne(this,'goal')">👋 Найти друзей</div>
-      <div class="tag" onclick="selectOne(this,'goal')">🤔 Всё ещё разбираюсь</div>
+    <div class="section-title">🎯 Что ты ищешь?</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'goal')">💘 Долгосрочный партнёр</div>
+      <div class="chip" onclick="selectOne(this,'goal')">😍 Долго- или краткосрочно</div>
+      <div class="chip" onclick="selectOne(this,'goal')">🥂 Краткосрочные отношения</div>
+      <div class="chip" onclick="selectOne(this,'goal')">🎉 Просто повеселиться</div>
+      <div class="chip" onclick="selectOne(this,'goal')">👋 Найти друзей</div>
+      <div class="chip" onclick="selectOne(this,'goal')">🤔 Всё ещё разбираюсь</div>
     </div>
   </div>
 
   <!-- ПРИВЫЧКИ -->
   <div class="section">
     <div class="section-title">🌿 Привычки</div>
-
-    <div class="habit-section">
-      <div class="habit-title">🍷 Как часто ты пьёшь?</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'drink')">Не пью</div>
-        <div class="tag" onclick="selectOne(this,'drink')">Я за трезвость</div>
-        <div class="tag" onclick="selectOne(this,'drink')">По особым случаям</div>
-        <div class="tag" onclick="selectOne(this,'drink')">По выходным</div>
-        <div class="tag" onclick="selectOne(this,'drink')">Почти каждый вечер</div>
-      </div>
+    <div class="habit-label">🍷 Алкоголь</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'drink')">Не пью</div>
+      <div class="chip" onclick="selectOne(this,'drink')">Я за трезвость</div>
+      <div class="chip" onclick="selectOne(this,'drink')">По особым случаям</div>
+      <div class="chip" onclick="selectOne(this,'drink')">По выходным</div>
+      <div class="chip" onclick="selectOne(this,'drink')">Почти каждый вечер</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">🚬 Как часто ты куришь?</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'smoke')">Не курю</div>
-        <div class="tag" onclick="selectOne(this,'smoke')">Бросаю</div>
-        <div class="tag" onclick="selectOne(this,'smoke')">Курю за компанию</div>
-        <div class="tag" onclick="selectOne(this,'smoke')">Курю</div>
-      </div>
+    <div class="habit-label">🚬 Курение</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'smoke')">Не курю</div>
+      <div class="chip" onclick="selectOne(this,'smoke')">Бросаю</div>
+      <div class="chip" onclick="selectOne(this,'smoke')">Курю за компанию</div>
+      <div class="chip" onclick="selectOne(this,'smoke')">Курю</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">🏋️ Занимаешься спортом?</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'sport')">Каждый день</div>
-        <div class="tag" onclick="selectOne(this,'sport')">Часто</div>
-        <div class="tag" onclick="selectOne(this,'sport')">Иногда</div>
-        <div class="tag" onclick="selectOne(this,'sport')">Никогда</div>
-      </div>
+    <div class="habit-label">🏋️ Спорт</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'sport')">Каждый день</div>
+      <div class="chip" onclick="selectOne(this,'sport')">Часто</div>
+      <div class="chip" onclick="selectOne(this,'sport')">Иногда</div>
+      <div class="chip" onclick="selectOne(this,'sport')">Никогда</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">🐾 У тебя есть питомцы?</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'pet')">Собака</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Кошка</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Птица</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Рыбки</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Черепаха</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Хомяк</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Нет питомцев</div>
-        <div class="tag" onclick="selectOne(this,'pet')">Хочу питомца</div>
-      </div>
+    <div class="habit-label">🐾 Питомцы</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'pet')">Собака</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Кошка</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Птица</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Рыбки</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Черепаха</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Хомяк</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Нет питомцев</div>
+      <div class="chip" onclick="selectOne(this,'pet')">Хочу питомца</div>
     </div>
   </div>
 
   <!-- О СЕБЕ -->
   <div class="section">
     <div class="section-title">💬 О себе</div>
-
-    <div class="habit-section">
-      <div class="habit-title">💬 Стиль общения</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'comm')">Много переписываюсь</div>
-        <div class="tag" onclick="selectOne(this,'comm')">Общаюсь по телефону</div>
-        <div class="tag" onclick="selectOne(this,'comm')">Люблю видеочаты</div>
-        <div class="tag" onclick="selectOne(this,'comm')">Лучше встречусь лично</div>
-      </div>
+    <div class="habit-label">💬 Стиль общения</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'comm')">Много переписываюсь</div>
+      <div class="chip" onclick="selectOne(this,'comm')">Общаюсь по телефону</div>
+      <div class="chip" onclick="selectOne(this,'comm')">Люблю видеочаты</div>
+      <div class="chip" onclick="selectOne(this,'comm')">Лучше встречусь лично</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">❤️ Проявления любви</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'love')">Жесты внимания</div>
-        <div class="tag" onclick="selectOne(this,'love')">Подарки</div>
-        <div class="tag" onclick="selectOne(this,'love')">Прикосновения</div>
-        <div class="tag" onclick="selectOne(this,'love')">Комплименты</div>
-        <div class="tag" onclick="selectOne(this,'love')">Время вместе</div>
-      </div>
+    <div class="habit-label">❤️ Язык любви</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'love')">Жесты внимания</div>
+      <div class="chip" onclick="selectOne(this,'love')">Подарки</div>
+      <div class="chip" onclick="selectOne(this,'love')">Прикосновения</div>
+      <div class="chip" onclick="selectOne(this,'love')">Комплименты</div>
+      <div class="chip" onclick="selectOne(this,'love')">Время вместе</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">🎓 Образование</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'edu')">Средняя школа</div>
-        <div class="tag" onclick="selectOne(this,'edu')">Техникум</div>
-        <div class="tag" onclick="selectOne(this,'edu')">Бакалавриат</div>
-        <div class="tag" onclick="selectOne(this,'edu')">Магистратура</div>
-        <div class="tag" onclick="selectOne(this,'edu')">Аспирантура</div>
-        <div class="tag" onclick="selectOne(this,'edu')">Доктор наук</div>
-      </div>
+    <div class="habit-label">🎓 Образование</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'edu')">Средняя школа</div>
+      <div class="chip" onclick="selectOne(this,'edu')">Техникум</div>
+      <div class="chip" onclick="selectOne(this,'edu')">Бакалавриат</div>
+      <div class="chip" onclick="selectOne(this,'edu')">Магистратура</div>
+      <div class="chip" onclick="selectOne(this,'edu')">Аспирантура</div>
+      <div class="chip" onclick="selectOne(this,'edu')">Доктор наук</div>
     </div>
-
-    <div class="habit-section">
-      <div class="habit-title">🌙 Знак зодиака</div>
-      <div class="tags">
-        <div class="tag" onclick="selectOne(this,'zodiac')">Овен</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Телец</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Близнецы</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Рак</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Лев</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Дева</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Весы</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Скорпион</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Стрелец</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Козерог</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Водолей</div>
-        <div class="tag" onclick="selectOne(this,'zodiac')">Рыбы</div>
-      </div>
+    <div class="habit-label">🌙 Знак зодиака</div>
+    <div class="chips">
+      <div class="chip" onclick="selectOne(this,'zodiac')">♈ Овен</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♉ Телец</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♊ Близнецы</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♋ Рак</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♌ Лев</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♍ Дева</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♎ Весы</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♏ Скорпион</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♐ Стрелец</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♑ Козерог</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♒ Водолей</div>
+      <div class="chip" onclick="selectOne(this,'zodiac')">♓ Рыбы</div>
     </div>
   </div>
 
   <!-- ИНТЕРЕСЫ -->
   <div class="section">
-    <div class="section-title">✨ Интересы</div>
-    <div class="counter" id="interestCount">Выбрано: 0/10</div>
-    <div class="tags" id="interestTags">
-      <div class="tag" onclick="selectInterest(this)">☕ Кофе</div>
-      <div class="tag" onclick="selectInterest(this)">✈️ Путешествия</div>
-      <div class="tag" onclick="selectInterest(this)">📚 Чтение</div>
-      <div class="tag" onclick="selectInterest(this)">🎮 Игры</div>
-      <div class="tag" onclick="selectInterest(this)">🎵 Музыка</div>
-      <div class="tag" onclick="selectInterest(this)">🏃 Спорт</div>
-      <div class="tag" onclick="selectInterest(this)">🍕 Еда</div>
-      <div class="tag" onclick="selectInterest(this)">🎨 Искусство</div>
-      <div class="tag" onclick="selectInterest(this)">🎭 Театр</div>
-      <div class="tag" onclick="selectInterest(this)">🏔️ Горы</div>
-      <div class="tag" onclick="selectInterest(this)">🧘 Йога</div>
-      <div class="tag" onclick="selectInterest(this)">🎬 Кино</div>
-      <div class="tag" onclick="selectInterest(this)">🐕 Животные</div>
-      <div class="tag" onclick="selectInterest(this)">🍳 Кулинария</div>
-      <div class="tag" onclick="selectInterest(this)">📸 Фото</div>
-      <div class="tag" onclick="selectInterest(this)">🚴 Велоспорт</div>
-      <div class="tag" onclick="selectInterest(this)">🎸 Гитара</div>
-      <div class="tag" onclick="selectInterest(this)">💃 Танцы</div>
-      <div class="tag" onclick="selectInterest(this)">🏄 Сёрфинг</div>
-      <div class="tag" onclick="selectInterest(this)">⛷️ Лыжи</div>
-      <div class="tag" onclick="selectInterest(this)">🧩 Настолки</div>
-      <div class="tag" onclick="selectInterest(this)">🎤 Караоке</div>
-      <div class="tag" onclick="selectInterest(this)">🌿 Природа</div>
-      <div class="tag" onclick="selectInterest(this)">💻 Технологии</div>
-      <div class="tag" onclick="selectInterest(this)">🏋️ Фитнес</div>
-      <div class="tag" onclick="selectInterest(this)">🎪 Фестивали</div>
-      <div class="tag" onclick="selectInterest(this)">🍣 Суши</div>
-      <div class="tag" onclick="selectInterest(this)">🧁 Выпечка</div>
-      <div class="tag" onclick="selectInterest(this)">🎯 Боулинг</div>
-      <div class="tag" onclick="selectInterest(this)">🏊 Плавание</div>
+    <div class="section-title">✨ Интересы и хобби</div>
+    <div class="interest-counter" id="interestCount">Выбрано: 0 / 10</div>
+    <div class="chips" id="interestTags">
+      <div class="chip" onclick="selectInterest(this)">☕ Кофе</div>
+      <div class="chip" onclick="selectInterest(this)">✈️ Путешествия</div>
+      <div class="chip" onclick="selectInterest(this)">📚 Чтение</div>
+      <div class="chip" onclick="selectInterest(this)">🎮 Игры</div>
+      <div class="chip" onclick="selectInterest(this)">🎵 Музыка</div>
+      <div class="chip" onclick="selectInterest(this)">🏃 Спорт</div>
+      <div class="chip" onclick="selectInterest(this)">🍕 Еда</div>
+      <div class="chip" onclick="selectInterest(this)">🎨 Искусство</div>
+      <div class="chip" onclick="selectInterest(this)">🎭 Театр</div>
+      <div class="chip" onclick="selectInterest(this)">🏔️ Горы</div>
+      <div class="chip" onclick="selectInterest(this)">🧘 Йога</div>
+      <div class="chip" onclick="selectInterest(this)">🎬 Кино</div>
+      <div class="chip" onclick="selectInterest(this)">🐕 Животные</div>
+      <div class="chip" onclick="selectInterest(this)">🍳 Кулинария</div>
+      <div class="chip" onclick="selectInterest(this)">📸 Фото</div>
+      <div class="chip" onclick="selectInterest(this)">🚴 Велоспорт</div>
+      <div class="chip" onclick="selectInterest(this)">🎸 Гитара</div>
+      <div class="chip" onclick="selectInterest(this)">💃 Танцы</div>
+      <div class="chip" onclick="selectInterest(this)">🏄 Сёрфинг</div>
+      <div class="chip" onclick="selectInterest(this)">⛷️ Лыжи</div>
+      <div class="chip" onclick="selectInterest(this)">🧩 Настолки</div>
+      <div class="chip" onclick="selectInterest(this)">🎤 Караоке</div>
+      <div class="chip" onclick="selectInterest(this)">🌿 Природа</div>
+      <div class="chip" onclick="selectInterest(this)">💻 Технологии</div>
+      <div class="chip" onclick="selectInterest(this)">🏋️ Фитнес</div>
+      <div class="chip" onclick="selectInterest(this)">🎪 Фестивали</div>
+      <div class="chip" onclick="selectInterest(this)">🍣 Суши</div>
+      <div class="chip" onclick="selectInterest(this)">🧁 Выпечка</div>
+      <div class="chip" onclick="selectInterest(this)">🎯 Боулинг</div>
+      <div class="chip" onclick="selectInterest(this)">🏊 Плавание</div>
     </div>
   </div>
 
-  <button class="btn" onclick="saveProfile()">💾 Сохранить всё</button>
+  <button class="btn-save" onclick="saveProfile()">💾 Сохранить профиль</button>
   <button class="btn-logout" onclick="logout()">Выйти из аккаунта</button>
 </div>
 
 <script>
 const token = localStorage.getItem('token');
-if(!token) window.location.href = '/login';
+if(!token) window.location.href='/login';
 let interestCount = 0;
+let selectedGender = '';
+
+function setGender(g){
+  selectedGender = g;
+  document.getElementById('gMale').classList.toggle('active', g==='male');
+  document.getElementById('gFemale').classList.toggle('active', g==='female');
+}
 
 function selectOne(el, group){
-  const container = el.closest('.tags') || el.parentElement;
-  container.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
-  el.classList.add('selected');
+  const allChips = document.querySelectorAll('.chip');
+  allChips.forEach(c => {
+    if(c.getAttribute('onclick') && c.getAttribute('onclick').includes("'"+group+"'"))
+      c.classList.remove('active');
+  });
+  el.classList.add('active');
 }
 
 function selectInterest(el){
-  if(el.classList.contains('selected')){
-    el.classList.remove('selected');
+  if(el.classList.contains('active')){
+    el.classList.remove('active');
     interestCount--;
   } else {
     if(interestCount >= 10) return;
-    el.classList.add('selected');
+    el.classList.add('active');
     interestCount++;
   }
-  document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+'/10';
+  document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+' / 10';
 }
 
 function getSelected(group){
-  const tags = document.querySelectorAll(`.tag.selected`);
-  for(let tag of tags){
-    if(tag.getAttribute('onclick') && tag.getAttribute('onclick').includes("'"+group+"'")){
-      return tag.textContent.trim();
+  const all = document.querySelectorAll('.chip');
+  for(let c of all){
+    if(c.classList.contains('active') && c.getAttribute('onclick') && c.getAttribute('onclick').includes("'"+group+"'")){
+      return c.textContent.trim();
     }
   }
   return null;
 }
 
 function getInterests(){
-  return Array.from(document.querySelectorAll('#interestTags .tag.selected'))
-    .map(t => t.textContent.trim()).join(',');
+  return Array.from(document.querySelectorAll('#interestTags .chip.active'))
+    .map(t=>t.textContent.trim()).join(',');
 }
 
 function setSelected(group, value){
   if(!value) return;
-  document.querySelectorAll('.tag').forEach(tag => {
-    if(tag.getAttribute('onclick') && tag.getAttribute('onclick').includes("'"+group+"'") && tag.textContent.trim() === value){
-      tag.classList.add('selected');
+  const val = value.trim();
+  document.querySelectorAll('.chip').forEach(c => {
+    if(c.getAttribute('onclick') && c.getAttribute('onclick').includes("'"+group+"'")){
+      const txt = c.textContent.trim();
+      if(txt===val || txt.includes(val) || val.includes(txt)){
+        c.classList.add('active');
+      }
     }
   });
 }
 
-async function loadProfile() {
+async function uploadPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch('/users/me/photo', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+token},
+    body: formData
+  });
+  if(res.ok){
+    const data = await res.json();
+    const img = document.getElementById('avatarImg');
+    img.src = '/static/'+data.photo+'?t='+Date.now();
+    img.style.display='block';
+    document.getElementById('avatarEmoji').style.display='none';
+  }
+}
+
+async function loadProfile(){
   const res = await fetch('/users/me', {headers:{'Authorization':'Bearer '+token}});
   if(res.status===401){ window.location.href='/login'; return; }
-  const user = await res.json();
+  const u = await res.json();
 
-  document.getElementById('name').value = user.name||'';
-  document.getElementById('age').value = user.age||'';
-  document.getElementById('height').value = user.height||'';
-  document.getElementById('bio').value = user.bio||'';
-  document.getElementById('gender').value = user.gender||'male';
+  document.getElementById('displayName').textContent = u.name||'';
+  document.getElementById('name').value = u.name||'';
+  document.getElementById('age').value = u.age||'';
+  document.getElementById('height').value = u.height||'';
+  document.getElementById('bio').value = u.bio||'';
+
+  if(u.photo && u.photo !== 'default.jpg'){
+    const img = document.getElementById('avatarImg');
+    img.src = '/static/'+u.photo;
+    img.style.display='block';
+    document.getElementById('avatarEmoji').style.display='none';
+  }
+
   const citySelect = document.getElementById('city');
-  for(let opt of citySelect.options){ if(opt.value===user.city) opt.selected=true; }
+  for(let opt of citySelect.options){ if(opt.value===u.city||opt.text===u.city) opt.selected=true; }
 
-  // Загружаем теги
-  setSelected('goal', user.goal);
-  setSelected('drink', user.drink);
-  setSelected('smoke', user.smoke);
-  setSelected('sport', user.sport);
-  setSelected('pet', user.pet);
-  setSelected('comm', user.communication);
-  setSelected('love', user.love_language);
-  setSelected('edu', user.education);
-  setSelected('zodiac', user.zodiac);
+  setGender(u.gender||'male');
+  setSelected('goal', u.goal);
+  setSelected('drink', u.drink);
+  setSelected('smoke', u.smoke);
+  setSelected('sport', u.sport);
+  setSelected('pet', u.pet);
+  setSelected('comm', u.communication);
+  setSelected('love', u.love_language);
+  setSelected('edu', u.education);
+  setSelected('zodiac', u.zodiac);
 
-  // Загружаем интересы
-  if(user.interests){
-    const list = user.interests.split(',').map(i=>i.trim());
-    document.querySelectorAll('#interestTags .tag').forEach(tag => {
-      if(list.includes(tag.textContent.trim())){
-        tag.classList.add('selected');
+  if(u.interests){
+    const list = u.interests.split(',').map(i=>i.trim());
+    document.querySelectorAll('#interestTags .chip').forEach(c => {
+      if(list.includes(c.textContent.trim())){
+        c.classList.add('active');
         interestCount++;
       }
     });
-    document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+'/10';
+    document.getElementById('interestCount').textContent = 'Выбрано: '+interestCount+' / 10';
   }
 }
 
@@ -325,35 +422,22 @@ async function saveProfile(){
   const age = document.getElementById('age').value;
   const city = document.getElementById('city').value;
   const bio = document.getElementById('bio').value;
-
-  // Сохраняем основное
   const height = document.getElementById('height').value;
-  await fetch('/users/me?name='+encodeURIComponent(name)+'&age='+age+'&height='+height+'&city=, {
+
+  await fetch(`/users/me?name=${encodeURIComponent(name)}&age=${age}&height=${height}&city=${encodeURIComponent(city)}&bio=${encodeURIComponent(bio)}&gender=${selectedGender}`, {
     method:'PUT', headers:{'Authorization':'Bearer '+token}
   });
 
-  // Сохраняем анкету
   let params = new URLSearchParams();
-  const goal = getSelected('goal');
-  const drink = getSelected('drink');
-  const smoke = getSelected('smoke');
-  const sport = getSelected('sport');
-  const pet = getSelected('pet');
-  const comm = getSelected('comm');
-  const love = getSelected('love');
-  const edu = getSelected('edu');
-  const zodiac = getSelected('zodiac');
+  const fields = {
+    goal: getSelected('goal'), drink: getSelected('drink'),
+    smoke: getSelected('smoke'), sport: getSelected('sport'),
+    pet: getSelected('pet'), communication: getSelected('comm'),
+    love_language: getSelected('love'), education: getSelected('edu'),
+    zodiac: getSelected('zodiac')
+  };
+  Object.entries(fields).forEach(([k,v]) => { if(v) params.append(k,v); });
   const interests = getInterests();
-
-  if(goal) params.append('goal', goal);
-  if(drink) params.append('drink', drink);
-  if(smoke) params.append('smoke', smoke);
-  if(sport) params.append('sport', sport);
-  if(pet) params.append('pet', pet);
-  if(comm) params.append('communication', comm);
-  if(love) params.append('love_language', love);
-  if(edu) params.append('education', edu);
-  if(zodiac) params.append('zodiac', zodiac);
   if(interests) params.append('interests', interests);
 
   await fetch('/users/me/onboarding?'+params.toString(), {
@@ -362,6 +446,7 @@ async function saveProfile(){
 
   const el = document.getElementById('success');
   el.style.display='block';
+  window.scrollTo(0,0);
   setTimeout(()=>{ el.style.display='none'; window.location.href='/profile'; }, 2000);
 }
 

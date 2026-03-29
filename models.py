@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, BigInteger, String, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
@@ -7,15 +7,18 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     name = Column(String)
     age = Column(Integer)
     gender = Column(String)
     city = Column(String)
+    phone = Column(String, nullable=True)
     bio = Column(Text)
     height = Column(Integer, nullable=True)
+    reset_token = Column(String, nullable=True)
+    telegram_id = Column(BigInteger, nullable=True)
     photo = Column(String, default="default.jpg")
     goal = Column(String, nullable=True)
     drink = Column(String, nullable=True)
@@ -27,8 +30,9 @@ class User(Base):
     education = Column(String, nullable=True)
     zodiac = Column(String, nullable=True)
     interests = Column(Text, nullable=True)
-
     is_active = Column(Boolean, default=True)
+    is_blocked = Column(Boolean, default=False)
+    subscription = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     sent_messages = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender")
