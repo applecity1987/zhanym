@@ -192,4 +192,3 @@ def get_all_likes(request: Request, db: Session = Depends(get_db)):
         reverse = db.query(models.Like).filter(models.Like.liker_id==l.liked_id, models.Like.liked_id==l.liker_id).first()
         result.append({"id":l.id,"liker_id":l.liker_id,"liked_id":l.liked_id,"is_match":bool(reverse)})
     return result
-EOF
