@@ -173,8 +173,6 @@ def admin_logout():
     return response
 
 
-cat >> ~/dating-site/routers/admin_router.py << 'EOF'
-
 # ===== ВСЕ СООБЩЕНИЯ =====
 @router.get("/api/messages")
 def get_all_messages(request: Request, db: Session = Depends(get_db)):
