@@ -123,6 +123,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--dark);col
 .messages{
   flex:1;overflow-y:auto;
   padding:16px 16px 12px;
+  padding-bottom:80px;
   display:flex;flex-direction:column;gap:8px;
   background:var(--dark);
 }
@@ -169,8 +170,9 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--dark);col
 /* INPUT */
 .chat-input-wrap{
   padding:10px 16px 20px;
-  position:sticky;
-  bottom:0;
+  position:fixed;
+  bottom:80px;
+  left:0;right:0;
   background:rgba(13,13,26,.97);
   border-top:1px solid rgba(255,255,255,.07);
   display:flex;align-items:center;gap:10px;
