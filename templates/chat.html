@@ -305,7 +305,8 @@ async function loadMe(){
 }
 
 function connectGlobalWS(){
-  window._globalWs=new WebSocket('ws://127.0.0.1:8000/chat/ws/'+myId);
+  const wsUrl=(location.protocol==='https:'?'wss://':'ws://')+location.host+'/chat/ws/'+myId;
+window._globalWs=new WebSocket(wsUrl);
   window._globalWs.onmessage=function(e){
     const data=JSON.parse(e.data);
     if(data.sender_id!==currentMatchId){
