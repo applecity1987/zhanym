@@ -171,3 +171,25 @@ def admin_logout():
     response = JSONResponse({"ok": True})
     response.delete_cookie("admin_token")
     return response
+
+
+cat >> ~/dating-site/routers/admin_router.py << 'EOF'
+
+# ===== ВСЕ СООБЩЕНИЯ =====
+@router.get("/api/messages")
+def get_all_messages(request: Request, db: Session = Depends(get_db)):
+    check_admin(request)
+    msgs = db.query(models.Message).order_by(models.Message.id.desc()).limit(500).all()
+    return [{"id":m.id,"sender_id":m.sender_id,"receiver_id":m.receiver_id,"content":m.content} for m in msgs]
+
+# ===== ВСЕ ЛАЙКИ =====
+@router.get("/api/likes")
+def get_all_likes(request: Request, db: Session = Depends(get_db)):
+    check_admin(request)
+    likes = db.query(models.Like).order_by(models.Like.id.desc()).all()
+    result = []
+    for l in likes:
+        reverse = db.query(models.Like).filter(models.Like.liker_id==l.liked_id, models.Like.liked_id==l.liker_id).first()
+        result.append({"id":l.id,"liker_id":l.liker_id,"liked_id":l.liked_id,"is_match":bool(reverse)})
+    return result
+EOF
