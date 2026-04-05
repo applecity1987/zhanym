@@ -42,13 +42,8 @@ def send_email(to_email: str, code: str):
         </div>
         """
     })
+    # ВСЁ — больше ничего не нужно. Удали строки msg.attach и server.login ниже.
 
-    msg.attach(MIMEText(html, "html"))
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(GMAIL_USER, GMAIL_PASSWORD)
-        server.sendmail(GMAIL_USER, to_email, msg.as_string())
 
 @router.get("/me")
 def get_me(current_user: models.User = Depends(get_current_user)):
