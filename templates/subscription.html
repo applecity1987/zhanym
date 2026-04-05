@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Подписка — Zhanym</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <style>
 :root{--pink:#ff4d6d;--pink2:#ff85a1;--dark:#0d0d1a;--gold:#ffd60a;--blue:#4cc9f0;--silver:#c0c0c0}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -15,7 +16,6 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
   radial-gradient(ellipse at 80% 60%,rgba(255,214,10,.08) 0%,transparent 50%),
   radial-gradient(ellipse at 50% 90%,rgba(76,201,240,.08) 0%,transparent 50%),var(--dark)}
 
-/* HEADER */
 .page-header{
   position:fixed;top:0;left:0;right:0;z-index:100;
   padding:54px 20px 14px;
@@ -32,10 +32,8 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
 }
 .header-title{font-size:18px;font-weight:900}
 
-/* CONTAINER */
 .container{position:relative;z-index:1;padding:0 16px 50px;margin-top:110px}
 
-/* HERO */
 .hero{text-align:center;padding:20px 0 28px}
 .hero-badge{
   display:inline-block;
@@ -56,7 +54,6 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
 }
 .hero p{color:rgba(255,255,255,.4);font-size:14px;line-height:1.6}
 
-/* TOGGLE */
 .toggle-wrap{display:flex;justify-content:center;margin-bottom:24px}
 .toggle{
   background:rgba(255,255,255,.06);border-radius:50px;padding:4px;
@@ -74,9 +71,7 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
   margin-left:6px;vertical-align:middle;
 }
 
-/* PLAN CARDS */
 .plans{display:flex;flex-direction:column;gap:14px}
-
 .plan{
   border-radius:24px;padding:22px 20px;
   position:relative;
@@ -85,7 +80,6 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
   transition:.2s;cursor:pointer;overflow:hidden;
 }
 .plan:active{transform:scale(.98)}
-
 .plan.silver{border-color:rgba(192,192,192,.2)}
 .plan.gold{border-color:rgba(255,214,10,.3);background:rgba(255,214,10,.04)}
 .plan.almaz{border-color:rgba(76,201,240,.25);background:rgba(76,201,240,.04)}
@@ -108,9 +102,7 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
 .plan-price{font-size:22px;font-weight:900;color:white;margin-top:2px}
 .plan-price span{font-size:13px;color:rgba(255,255,255,.4);font-weight:600}
 
-.plan-features{
-  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;
-}
+.plan-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .feature-tag{
   padding:5px 12px;border-radius:50px;
   font-size:11px;font-weight:700;
@@ -132,85 +124,11 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
 .gold .plan-btn{background:linear-gradient(135deg,var(--gold),#ff8c00);color:#000;box-shadow:0 6px 20px rgba(255,214,10,.3)}
 .almaz .plan-btn{background:linear-gradient(135deg,var(--blue),#0099cc);color:#000;box-shadow:0 6px 20px rgba(76,201,240,.3)}
 
-/* GUARANTEE */
 .guarantee{
   text-align:center;margin-top:20px;
   color:rgba(255,255,255,.25);font-size:12px;line-height:2;
 }
 
-/* POPUP */
-.popup-overlay{
-  display:none;position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,.85);backdrop-filter:blur(20px);
-  align-items:flex-end;justify-content:center;
-}
-.popup-overlay.show{display:flex;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.popup{
-  width:100%;max-width:500px;
-  background:linear-gradient(135deg,#12122a,#1e1e3a);
-  border-radius:32px 32px 0 0;
-  padding:28px 24px calc(env(safe-area-inset-bottom) + 28px);
-  border:1px solid rgba(255,255,255,.1);
-  border-bottom:none;
-  animation:slideUp .4s cubic-bezier(.34,1.2,.64,1);
-}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.popup-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px}
-.popup-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.popup-avatar{
-  width:52px;height:52px;border-radius:16px;
-  display:flex;align-items:center;justify-content:center;font-size:28px;
-}
-.popup-info{}
-.popup-title{font-size:18px;font-weight:900}
-.popup-price-line{font-size:15px;color:rgba(255,255,255,.5);font-weight:600;margin-top:2px}
-
-.kaspi-card{
-  background:rgba(255,70,0,.08);
-  border:1px solid rgba(255,70,0,.2);
-  border-radius:20px;padding:18px;margin-bottom:18px;
-}
-.kaspi-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.kaspi-logo{font-size:24px}
-.kaspi-name{font-size:15px;font-weight:900;color:#ff6b00}
-.kaspi-phone{
-  font-family:'Unbounded',sans-serif;
-  font-size:20px;font-weight:900;
-  color:white;margin-bottom:6px;letter-spacing:1px;
-}
-.kaspi-hint{font-size:12px;color:rgba(255,255,255,.4);font-weight:600;line-height:1.5}
-
-.steps-list{margin-bottom:20px}
-.step-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);
-  font-size:13px;font-weight:600;color:rgba(255,255,255,.7);
-}
-.step-item:last-child{border-bottom:none}
-.step-num{
-  width:26px;height:26px;border-radius:50%;
-  background:rgba(255,77,109,.15);color:var(--pink);
-  font-size:12px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-
-.confirm-btn{
-  width:100%;padding:16px;border:none;border-radius:50px;
-  background:linear-gradient(135deg,var(--pink),var(--pink2));
-  color:white;font-size:16px;font-weight:900;
-  font-family:'Nunito',sans-serif;cursor:pointer;
-  box-shadow:0 8px 25px rgba(255,77,109,.4);transition:.2s;
-}
-.confirm-btn:active{transform:scale(.97)}
-.cancel-btn{
-  width:100%;padding:14px;border:none;border-radius:50px;
-  background:rgba(255,255,255,.06);
-  color:rgba(255,255,255,.5);font-size:14px;font-weight:700;
-  font-family:'Nunito',sans-serif;cursor:pointer;margin-top:10px;
-}
-
-/* SUCCESS */
 .success-toast{
   position:fixed;top:60px;left:16px;right:16px;
   background:linear-gradient(135deg,#06d6a0,#00b894);
@@ -248,12 +166,12 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
 
   <div class="plans">
 
-    <div class="plan silver" onclick="openPayment('silver')">
+    <div class="plan silver" onclick="openCheckout('silver')">
       <div class="plan-top">
         <div class="plan-icon">⭐</div>
         <div class="plan-meta">
           <div class="plan-name">Zhanym Silver</div>
-          <div class="plan-price" id="silverPrice">2 000 ₸<span id="silverPeriod"> / 7 дней</span></div>
+          <div class="plan-price" id="silverPrice">$4<span id="silverPeriod"> / 7 дней</span></div>
         </div>
       </div>
       <div class="plan-features">
@@ -265,13 +183,13 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
       <button class="plan-btn">Начать с Silver →</button>
     </div>
 
-    <div class="plan gold" onclick="openPayment('gold')">
+    <div class="plan gold" onclick="openCheckout('gold')">
       <div class="plan-popular">🔥 Популярный</div>
       <div class="plan-top" style="margin-top:10px">
         <div class="plan-icon">🥇</div>
         <div class="plan-meta">
           <div class="plan-name">Zhanym Gold</div>
-          <div class="plan-price" id="goldPrice">5 000 ₸<span id="goldPeriod"> / месяц</span></div>
+          <div class="plan-price" id="goldPrice">$10<span id="goldPeriod"> / месяц</span></div>
         </div>
       </div>
       <div class="plan-features">
@@ -285,13 +203,13 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
       <button class="plan-btn">Начать с Gold →</button>
     </div>
 
-    <div class="plan almaz" onclick="openPayment('almaz')">
+    <div class="plan almaz" onclick="openCheckout('almaz')">
       <div class="plan-popular">💎 Лучший выбор</div>
       <div class="plan-top" style="margin-top:10px">
         <div class="plan-icon">💎</div>
         <div class="plan-meta">
           <div class="plan-name">Zhanym Almaz</div>
-          <div class="plan-price" id="almazPrice">7 000 ₸<span id="almazPeriod"> / месяц</span></div>
+          <div class="plan-price" id="almazPrice">$14<span id="almazPeriod"> / месяц</span></div>
         </div>
       </div>
       <div class="plan-features">
@@ -307,97 +225,72 @@ html,body{background:var(--dark);color:white;font-family:'Nunito',sans-serif;min
   </div>
 
   <div class="guarantee">
-    🔒 Безопасная оплата &nbsp;·&nbsp; 💳 Kaspi Pay &nbsp;·&nbsp; 🛡️ Отмена в любой момент
-  </div>
-</div>
-
-<!-- PAYMENT POPUP -->
-<div class="popup-overlay" id="popup" onclick="handleOverlayClick(event)">
-  <div class="popup" id="popupContent">
-    <div class="popup-handle"></div>
-    <div class="popup-header">
-      <div class="popup-avatar" id="popupAvatar">🥇</div>
-      <div class="popup-info">
-        <div class="popup-title" id="popupTitle">Zhanym Gold</div>
-        <div class="popup-price-line" id="popupPriceLine">5 000 ₸ / месяц</div>
-      </div>
-    </div>
-
-    <div class="kaspi-card">
-      <div class="kaspi-header">
-        <div class="kaspi-logo">🟠</div>
-        <div class="kaspi-name">Оплата через Kaspi</div>
-      </div>
-      <div class="kaspi-phone">+7 (___) ___ __ __</div>
-      <div class="kaspi-hint">Укажи в комментарии свой username или email</div>
-    </div>
-
-    <div class="steps-list">
-      <div class="step-item"><span class="step-num">1</span>Открой приложение Kaspi.kz</div>
-      <div class="step-item"><span class="step-num">2</span>Переводы → по номеру телефона</div>
-      <div class="step-item"><span class="step-num">3</span>Введи сумму и укажи username в комментарии</div>
-      <div class="step-item"><span class="step-num">4</span>Подписка активируется в течение часа</div>
-    </div>
-
-    <button class="confirm-btn" onclick="confirmPayment()">✅ Я оплатил — сообщить</button>
-    <button class="cancel-btn" onclick="closePayment()">Отмена</button>
+    🔒 Безопасная оплата &nbsp;·&nbsp; 💳 Visa / Mastercard / Apple Pay &nbsp;·&nbsp; 🛡️ Отмена в любой момент
   </div>
 </div>
 
 <script>
-let isMonthly=false;
-let currentPlan='gold';
-
-const plans={
-  silver:{icon:'⭐',name:'Zhanym Silver',weekPrice:'2 000 ₸',weekPeriod:' / 7 дней',monthPrice:'4 900 ₸',monthPeriod:' / месяц'},
-  gold:{icon:'🥇',name:'Zhanym Gold',weekPrice:'5 000 ₸',weekPeriod:' / неделю',monthPrice:'3 900 ₸',monthPeriod:' / месяц'},
-  almaz:{icon:'💎',name:'Zhanym Almaz',weekPrice:'7 000 ₸',weekPeriod:' / неделю',monthPrice:'5 900 ₸',monthPeriod:' / месяц'},
+// ===== PADDLE PRICE IDs =====
+const PRICE_IDS = {
+  silver: 'pri_01knfcwtsjdv5drrqpsrafp9kt',  // $4/week
+  gold:   'pri_01knfd22htctsgbq5ejseejakf',  // $10/month
+  almaz:  'pri_01knfd4kjx32ty6nnmgwh8zcc7',  // $14/month
 };
 
-function setToggle(mode,btn){
-  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+// ===== ИНИЦИАЛИЗАЦИЯ PADDLE =====
+Paddle.Initialize({
+  token: 'pdl_live_apikey_01knfdfbj911268h9ktjk3p2qs_X9ttsgFpYVQP44G43FPBKM_Ako', // Замени на свой live_... токен
+  eventCallback: function(data) {
+    if (data.name === 'checkout.completed') {
+      showSuccess('✅ Подписка активирована! Добро пожаловать в Premium 🎉');
+      // Активируем подписку на сервере
+      activateSubscription(data.data.transaction_id);
+    }
+  }
+});
+
+let isMonthly = false;
+
+function setToggle(mode, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  isMonthly=mode==='month';
-  updatePrices();
+  isMonthly = mode === 'month';
 }
 
-function updatePrices(){
-  ['silver','gold','almaz'].forEach(key=>{
-    const p=plans[key];
-    const price=isMonthly?p.monthPrice:p.weekPrice;
-    const period=isMonthly?p.monthPeriod:p.weekPeriod;
-    document.getElementById(key+'Price').childNodes[0].nodeValue=price;
-    document.getElementById(key+'Period').textContent=period;
+function openCheckout(plan) {
+  const priceId = PRICE_IDS[plan];
+
+  // Получаем email текущего пользователя
+  const userEmail = document.querySelector('meta[name="user-email"]')?.content || '';
+
+  Paddle.Checkout.open({
+    items: [{ priceId: priceId, quantity: 1 }],
+    customer: userEmail ? { email: userEmail } : undefined,
+    settings: {
+      displayMode: 'overlay',
+      theme: 'dark',
+      locale: 'ru',
+    }
   });
 }
 
-function openPayment(plan){
-  currentPlan=plan;
-  const p=plans[plan];
-  const price=isMonthly?p.monthPrice:p.weekPrice;
-  const period=isMonthly?p.monthPeriod:p.weekPeriod;
-  document.getElementById('popupAvatar').textContent=p.icon;
-  document.getElementById('popupTitle').textContent=p.name;
-  document.getElementById('popupPriceLine').textContent=price+period;
-  document.getElementById('popup').classList.add('show');
-  document.body.style.overflow='hidden';
+async function activateSubscription(transactionId) {
+  try {
+    await fetch('/subscriptions/activate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transaction_id: transactionId })
+    });
+  } catch(e) {
+    console.error('Ошибка активации:', e);
+  }
 }
 
-function closePayment(){
-  document.getElementById('popup').classList.remove('show');
-  document.body.style.overflow='';
-}
-
-function handleOverlayClick(e){
-  if(e.target===document.getElementById('popup')) closePayment();
-}
-
-function confirmPayment(){
-  closePayment();
-  const t=document.getElementById('successToast');
-  t.textContent='✅ Спасибо! Подписка активируется в течение часа';
+function showSuccess(msg) {
+  const t = document.getElementById('successToast');
+  t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),4000);
+  setTimeout(() => t.classList.remove('show'), 5000);
 }
 </script>
 </body>

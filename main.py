@@ -155,3 +155,6 @@ app.include_router(admin_router)
 @app.get("/admin", response_class=HTMLResponse)
 async def admin_page():
     return render("admin.html")
+
+from routers import subscriptions
+app.include_router(subscriptions.router)

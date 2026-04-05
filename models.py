@@ -33,7 +33,9 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_blocked = Column(Boolean, default=False)
     subscription = Column(String, nullable=True)
+    subscription_active = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
 
     sent_messages = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender")
     received_messages = relationship("Message", foreign_keys="Message.receiver_id", back_populates="receiver")
@@ -63,3 +65,5 @@ class Like(Base):
 
     liker = relationship("User", foreign_keys=[liker_id], back_populates="likes_given")
     liked = relationship("User", foreign_keys=[liked_id], back_populates="likes_received")
+
+
