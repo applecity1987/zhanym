@@ -18,26 +18,30 @@ router = APIRouter(prefix="/users", tags=["users"])
 GMAIL_USER = os.getenv("GMAIL_USER")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
 
-def send_email(to_email: str, code: str):
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = "🌹 Zhanym — Сброс пароля"
-    msg["From"] = GMAIL_USER
-    msg["To"] = to_email
 
-    html = f"""
-    <html><body style="font-family:Arial,sans-serif;background:#0d0d1a;margin:0;padding:20px">
-    <div style="max-width:400px;margin:0 auto;background:#16162a;border-radius:20px;padding:30px;text-align:center;border:1px solid rgba(255,77,109,.3)">
-        <div style="font-size:48px;margin-bottom:16px">🌹</div>
-        <h1 style="color:white;font-size:24px;margin-bottom:8px">Zhanym</h1>
-        <p style="color:rgba(255,255,255,.5);margin-bottom:24px">Сброс пароля</p>
-        <div style="background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.3);border-radius:16px;padding:20px;margin-bottom:24px">
-            <p style="color:rgba(255,255,255,.6);font-size:13px;margin-bottom:8px">Твой код для сброса пароля:</p>
-            <div style="font-size:36px;font-weight:900;color:#ff4d6d;letter-spacing:8px">{code}</div>
+def send_email(to_email: str, code: str):
+    import resend
+    resend.api_key = os.getenv("RESEND_API_KEY")
+
+    resend.Emails.send({
+        "from": "Zhanym <onboarding@resend.dev>",
+        "to": to_email,
+        "subject": "🌹 Zhanym — Сброс пароля",
+        "html": f"""
+        <div style="font-family:Arial,sans-serif;background:#0d0d1a;padding:20px">
+        <div style="max-width:400px;margin:0 auto;background:#16162a;border-radius:20px;padding:30px;text-align:center;border:1px solid rgba(255,77,109,.3)">
+            <div style="font-size:48px;margin-bottom:16px">🌹</div>
+            <h1 style="color:white;font-size:24px;margin-bottom:8px">Zhanym</h1>
+            <p style="color:rgba(255,255,255,.5);margin-bottom:24px">Сброс пароля</p>
+            <div style="background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.3);border-radius:16px;padding:20px;margin-bottom:24px">
+                <p style="color:rgba(255,255,255,.6);font-size:13px;margin-bottom:8px">Твой код:</p>
+                <div style="font-size:36px;font-weight:900;color:#ff4d6d;letter-spacing:8px">{code}</div>
+            </div>
+            <p style="color:rgba(255,255,255,.4);font-size:12px">Код действует 10 минут.</p>
         </div>
-        <p style="color:rgba(255,255,255,.4);font-size:12px">Код действует 10 минут.<br>Если ты не запрашивал сброс — просто проигнорируй это письмо.</p>
-    </div>
-    </body></html>
-    """
+        </div>
+        """
+    })
 
     msg.attach(MIMEText(html, "html"))
 
