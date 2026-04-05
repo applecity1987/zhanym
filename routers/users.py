@@ -8,10 +8,43 @@ import os
 import smtplib
 import ssl
 import secrets
+import random
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from config import SECRET_KEY
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+GMAIL_USER = os.getenv("GMAIL_USER")
+GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
+
+def send_email(to_email: str, code: str):
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = "🌹 Zhanym — Сброс пароля"
+    msg["From"] = GMAIL_USER
+    msg["To"] = to_email
+
+    html = f"""
+    <html><body style="font-family:Arial,sans-serif;background:#0d0d1a;margin:0;padding:20px">
+    <div style="max-width:400px;margin:0 auto;background:#16162a;border-radius:20px;padding:30px;text-align:center;border:1px solid rgba(255,77,109,.3)">
+        <div style="font-size:48px;margin-bottom:16px">🌹</div>
+        <h1 style="color:white;font-size:24px;margin-bottom:8px">Zhanym</h1>
+        <p style="color:rgba(255,255,255,.5);margin-bottom:24px">Сброс пароля</p>
+        <div style="background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.3);border-radius:16px;padding:20px;margin-bottom:24px">
+            <p style="color:rgba(255,255,255,.6);font-size:13px;margin-bottom:8px">Твой код для сброса пароля:</p>
+            <div style="font-size:36px;font-weight:900;color:#ff4d6d;letter-spacing:8px">{code}</div>
+        </div>
+        <p style="color:rgba(255,255,255,.4);font-size:12px">Код действует 10 минут.<br>Если ты не запрашивал сброс — просто проигнорируй это письмо.</p>
+    </div>
+    </body></html>
+    """
+
+    msg.attach(MIMEText(html, "html"))
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(GMAIL_USER, GMAIL_PASSWORD)
+        server.sendmail(GMAIL_USER, to_email, msg.as_string())
 
 @router.get("/me")
 def get_me(current_user: models.User = Depends(get_current_user)):
@@ -24,6 +57,7 @@ def update_profile(
     city: str = None,
     bio: str = None,
     height: int = None,
+    gender: str = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
@@ -32,6 +66,7 @@ def update_profile(
     if city: current_user.city = city
     if bio: current_user.bio = bio
     if height: current_user.height = height
+    if gender: current_user.gender = gender
     db.commit()
     db.refresh(current_user)
     return current_user
@@ -92,42 +127,16 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email.ilike(email)).first()
     if not user:
         return {"message": "Email не найден", "found": False}
-    if not user.telegram_id:
-        return {"message": "Telegram не подключён", "found": False, "no_telegram": True}
 
-    import random
     code = str(random.randint(100000, 999999))
     user.reset_token = code
     db.commit()
 
-    import httpx
-    BOT_TOKEN = "8268233353:AAGD_d6IcNo2qOPeRViLzWJTDwkuQhWGa40"
-    httpx.post(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        json={
-            "chat_id": user.telegram_id,
-            "text": f"🌹 Zhanym — Сброс пароля\\n\\nТвой код: *{code}*\\n\\nВведи его на сайте. Действует 10 минут.",
-            "parse_mode": "Markdown"
-        }
-    )
-    return {"message": "Код отправлен в Telegram!", "found": True}
-
-@router.post("/reset-password")
-def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.reset_token == token).first()
-    if not user:
-        raise HTTPException(status_code=400, detail="Неверный токен")
-    user.hashed_password = hash_password(new_password)
-    user.reset_token = None
-    db.commit()
-    return {"message": "Пароль изменён!"}
-
-@router.get("/{user_id}")
-def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Пользователь не найден")
-    return user
+    try:
+        send_email(email, code)
+        return {"message": "Код отправлен на email!", "found": True}
+    except Exception as e:
+        return {"message": f"Ошибка отправки: {str(e)}", "found": False}
 
 @router.post("/verify-reset-code")
 def verify_reset_code(email: str, code: str, db: Session = Depends(get_db)):
@@ -145,3 +154,20 @@ def reset_password_by_code(email: str, code: str, new_password: str, db: Session
     user.reset_token = None
     db.commit()
     return {"message": "Пароль изменён!"}
+
+@router.post("/reset-password")
+def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.reset_token == token).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Неверный токен")
+    user.hashed_password = hash_password(new_password)
+    user.reset_token = None
+    db.commit()
+    return {"message": "Пароль изменён!"}
+
+@router.get("/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    return user
